@@ -26,5 +26,9 @@ describe('scoreTourAgainstSearch', () => {
   it('matches keywords', () => {
     expect(scoreTourAgainstSearch(sample, 'traver')?.reason).toBe('keyword');
   });
+
+  it('matches category terms inside multi-word tour queries', () => {
+    expect(scoreTourAgainstSearch(sample, 'doğa turları')?.reason).toBe('keyword');
+  });
 });
 
