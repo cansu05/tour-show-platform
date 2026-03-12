@@ -1,0 +1,18 @@
+{
+  "duration": "Dauer",
+  "price": "Preis",
+  "priceOnRequest": "Preis auf Anfrage",
+  "highlights": "Highlights",
+  "includedServices": "Inklusive Leistungen",
+  "share": "Teilen",
+  "copyLink": "Link kopieren",
+  "whatsApp": "WhatsApp",
+  "qr": "QR",
+  "publicPage": "Öffentliche Seite",
+  "backToTours": "Zurück zu Touren",
+  "showFullscreen": "Vollbild öffnen",
+  "previousImage": "Vorheriges Bild",
+  "nextImage": "Nächstes Bild",
+  "closeGallery": "Galerie schließen",
+  "missingTour": "Tour nicht gefunden."
+}

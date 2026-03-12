@@ -1,0 +1,30 @@
+﻿import {describe, expect, it} from 'vitest';
+import {scoreTourAgainstSearch} from '@/utils/search-rank';
+import type {Tour} from '@/types/tour';
+
+const sample: Tour = {
+  id: '1',
+  title: 'Pamukkale',
+  slug: 'pamukkale',
+  keywords: ['traverten', 'hierapolis'],
+  categories: ['doğa'],
+  shortDescription: 'x',
+  highlights: [],
+  includedServices: [],
+  coverImage: 'x',
+  gallery: [],
+  isActive: true,
+  createdAt: '2024-01-01',
+  updatedAt: '2024-01-01'
+};
+
+describe('scoreTourAgainstSearch', () => {
+  it('prioritizes exact title match', () => {
+    expect(scoreTourAgainstSearch(sample, 'Pamukkale')?.reason).toBe('exactTitle');
+  });
+
+  it('matches keywords', () => {
+    expect(scoreTourAgainstSearch(sample, 'traver')?.reason).toBe('keyword');
+  });
+});
+

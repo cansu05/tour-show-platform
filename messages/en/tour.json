@@ -1,0 +1,18 @@
+{
+  "duration": "Duration",
+  "price": "Price",
+  "priceOnRequest": "Price on request",
+  "highlights": "Highlights",
+  "includedServices": "Included services",
+  "share": "Share",
+  "copyLink": "Copy link",
+  "whatsApp": "WhatsApp",
+  "qr": "QR",
+  "publicPage": "Public page",
+  "backToTours": "Back to tours",
+  "showFullscreen": "Open fullscreen",
+  "previousImage": "Previous image",
+  "nextImage": "Next image",
+  "closeGallery": "Close gallery",
+  "missingTour": "Tour not found."
+}

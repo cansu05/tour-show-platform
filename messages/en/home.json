@@ -1,0 +1,21 @@
+{
+  "title": "Explore Tours",
+  "subtitle": "Find the right tour in seconds.",
+  "noActiveTours": "There are no active tours to display yet.",
+  "categories": "Categories",
+  "allCategories": "All",
+  "searchPlaceholder": "Type tour name or keyword",
+  "searchAria": "Search tours",
+  "clearSearch": "Clear search",
+  "voiceSearch": "Voice search",
+  "categoryLabels": {
+    "aile": "Family",
+    "doga": "Nature",
+    "deniz": "Sea",
+    "tarih": "History",
+    "macera": "Adventure",
+    "gunubirlik": "Daily",
+    "konaklamali": "Overnight"
+  },
+  "loadMoreTours": "Show more"
+}

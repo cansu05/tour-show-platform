@@ -1,0 +1,18 @@
+{
+  "duration": "Süre",
+  "price": "Fiyat",
+  "priceOnRequest": "Fiyat sorunuz",
+  "highlights": "Öne çıkanlar",
+  "includedServices": "Dahil hizmetler",
+  "share": "Paylaş",
+  "copyLink": "Link kopyala",
+  "whatsApp": "WhatsApp",
+  "qr": "QR",
+  "publicPage": "Genel sayfa",
+  "backToTours": "Turlara geri dön",
+  "showFullscreen": "Tam ekran aç",
+  "previousImage": "Önceki görsel",
+  "nextImage": "Sonraki görsel",
+  "closeGallery": "Galeriyi kapat",
+  "missingTour": "Tur bulunamadı."
+}
