@@ -1,80 +1,141 @@
-# Tour Show
+# Tour Show Platform
 
-A multilingual, tablet-first tour presentation application built for tourism sales teams to quickly search, present, and share tour packages with customers.
+Tourizm satis ekipleri icin gelistirilmis, cok dilli tur tanitim ve yonetim platformu.
 
-## Overview
+## Kisa Aciklama
 
-Tour Show is designed for in-person tour presentation workflows on tablets.  
-It helps tourism sales agents find the right tour in seconds, display rich visuals and key tour details, and share public tour pages with customers via link, WhatsApp, or QR code.
+Tour Show Platform, tur paketlerinin musterilere sunulmasi ve iceriklerin yonetim paneli uzerinden duzenlenmesi icin hazirlanmis bir monorepo projedir. Public uygulama tur detaylarini sergilerken, dashboard uygulamasi icerik yonetimi ve operasyonel duzenleme ihtiyaclarini karsilar.
 
-The project focuses on a clean user experience, scalable front-end architecture, multilingual support, and production-minded engineering decisions.
+## Kullanilan Teknolojiler
 
-## Core Features
+- Next.js 15
+- React 19
+- TypeScript
+- Material UI
+- Tailwind CSS
+- Firebase Firestore
+- Firebase Storage
+- Firebase Admin SDK
+- next-intl
+- Vitest
+- npm Workspaces
 
-- Tablet-first interface optimized for customer-facing usage
-- Tour search by title and keywords
-- Turkish character-tolerant and fuzzy search support
-- Voice search with browser speech recognition
-- Category-based filtering
-- Rich tour detail pages with gallery support
-- Shareable public tour pages
-- Locale-preserving URLs for shared links
-- QR code and WhatsApp sharing
-- Modular i18n setup with `de`, `en`, and `tr`
-- Firebase Firestore integration for content data
-- Firebase Storage integration for media assets
-- Seed script for sample tour data
-- Skeleton loading states and custom not-found handling
+## One Cikan Ozellikler
 
-## Tech Stack
+- Cok dilli yapi ve locale tabanli routing
+- Tablet odakli, hizli ve sade arayuz
+- Tur arama, kategori filtreleme ve fuzzy search
+- Sesli arama destegi
+- Zengin tur detay sayfalari ve galeri yapisi
+- Link, QR ve WhatsApp ile tur paylasimi
+- Dashboard uzerinden tur ekleme, guncelleme ve listeleme
+- Firebase tabanli veri ve medya yonetimi
+- `packages/shared` ile ortak kod kullanimi
 
-- **Framework:** Next.js (App Router)
-- **Language:** TypeScript
-- **UI Library:** Material UI
-- **Backend / Data:** Firebase Firestore
-- **Storage:** Firebase Storage
-- **Internationalization:** Next.js-compatible i18n setup
-- **Testing:** Vitest / Testing Library
-- **Package Manager:** Npm
+## Kurulum Adimlari
 
-## Architecture Highlights
-
-This project is built with maintainability and scalability in mind.
-
-### Front-end Architecture
-
-- App Router-based project structure
-- Clear separation between server and client components
-- Reusable, focused UI components
-- Shared types, constants, helpers, and services extracted into dedicated modules
-- Centralized Material UI theme and token structure
-
-### Data Layer
-
-- Firebase access is isolated behind service modules
-- Raw Firestore documents are mapped into typed domain models before being used in the UI
-- The codebase is structured to support future multilingual tour content without major refactors
-
-### UX / Product Decisions
-
-- Tablet-friendly spacing and touch targets
-- Locale-aware routing for public pages
-- Graceful fallbacks for unsupported browser APIs
-- Skeleton-based loading experience instead of empty loading screens
-- Polished empty, error, and no-result states
-
-## Project Structure
+### 1. Repoyu klonlayin
 
 ```bash
-app/
-components/
-features/
-services/
-theme/
-types/
-utils/
-i18n/
-messages/
-scripts/
-tests/
+git clone https://github.com/kullanici-adi/tour-show-platform.git
+cd tour-show-platform
 ```
+
+### 2. Bagimliliklari yukleyin
+
+```bash
+npm install
+```
+
+### 3. Ortam degiskenlerini tanimlayin
+
+Gerekli uygulama klasorlerinde `.env.local` dosyasi olusturun.
+
+Ornek:
+
+```env
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CLIENT_EMAIL=your_client_email
+FIREBASE_PRIVATE_KEY=your_private_key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 4. Gelistirme ortamini baslatin
+
+Public uygulama:
+
+```bash
+npm run dev:tour-app
+```
+
+Dashboard:
+
+```bash
+npm run dev:dashboard
+```
+
+Her iki uygulama:
+
+```bash
+npm run dev:all
+```
+
+## Kullanim
+
+Proje iki ana uygulamadan olusur:
+
+- `apps/tour-app`: Musteriye veya satis personeline gosterilen public uygulama
+- `apps/dashboard`: Tur iceriklerinin yonetildigi admin paneli
+
+Temel kullanim senaryolari:
+
+- Tur listeleme ve detay goruntuleme
+- Arama ve kategori bazli filtreleme
+- Tur paylasimi
+- Dashboard uzerinden yeni tur ekleme veya mevcut turu guncelleme
+
+## Klasor Yapisi
+
+```bash
+apps/
+  dashboard/      # Admin paneli
+  tour-app/       # Public tur uygulamasi
+
+packages/
+  shared/         # Ortak tipler ve yardimci moduller
+
+package.json
+README.md
+```
+
+## Gelistirilebilecek Alanlar
+
+- Rol bazli yetkilendirme sistemi
+- Dashboard icin gelismis raporlama ekranlari
+- Medya yonetim akislarinin guclendirilmesi
+- SEO ve performans optimizasyonlari
+- Test kapsaminin genisletilmesi
+- Hata izleme ve loglama entegrasyonlari
+
+## Ekran Goruntusu / Demo
+
+### Canli Demo
+
+- Public App: `[Canli demo linki eklenecek]`
+- Dashboard: `[Dashboard demo linki eklenecek]`
+
+### Ekran Goruntuleri
+
+```md
+![Ana Sayfa](./docs/screenshots/home.png)
+![Tur Detay](./docs/screenshots/tour-detail.png)
+![Dashboard](./docs/screenshots/dashboard.png)
+```
+
+> Bu alanlar hazir oldugunda guncellenebilir.
+
+## Iletisim
+
+- GitHub: `https://github.com/cansu05`
+- E-posta: `[iletisim mail adresi eklenecek]`
+- Proje sahibi: `Cansu`
