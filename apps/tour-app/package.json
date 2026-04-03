@@ -2,6 +2,7 @@
   "name": "@tour-show/tour-app",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.9.2",
   "scripts": {
     "dev": "next dev",
     "dev:clean": "npm run clean:next && next dev",
@@ -42,5 +43,8 @@
     "tsx": "^4.19.3",
     "typescript": "5.9.3",
     "vitest": "^3.0.8"
+  },
+  "optionalDependencies": {
+    "@parcel/watcher-linux-x64-glibc": "^2.5.6"
   }
 }
