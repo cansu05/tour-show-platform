@@ -3,8 +3,8 @@ import './globals.css';
 import {AppProviders} from '@/lib/providers/app-providers';
 
 export const metadata: Metadata = {
-  title: 'Tour Tablet MVP',
-  description: 'Tablet-friendly tourism tour presentation app'
+  title: 'Tour Show Platform',
+  description: 'Tablet-friendly tourism tour presentation platform'
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
