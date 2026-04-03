@@ -1,4 +1,6 @@
 node_modules
+apps/tour-app/.next
+apps/dashboard/.next
 .next
 out
 .env

@@ -1,0 +1,10 @@
+{
+  "appName": "Tour Tablet",
+  "retry": "Erneut versuchen",
+  "close": "Schließen",
+  "language": "Sprache",
+  "unsupported": "Nicht unterstützt",
+  "tourLoadError": "Die Tourdaten konnten nicht geladen werden. Prüfe deine Internetverbindung und versuche es erneut.",
+  "pageNotFoundTitle": "Seite nicht gefunden.",
+  "pageNotFoundDescription": "Die angeforderte Seite existiert nicht."
+}

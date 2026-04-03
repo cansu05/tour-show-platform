@@ -1,0 +1,46 @@
+{
+  "name": "@tour-show/tour-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:clean": "npm run clean:next && next dev",
+    "build": "next build",
+    "build:clean": "npm run clean:next && next build",
+    "start": "next start",
+    "clean:next": "node scripts/clean-next.mjs",
+    "lint": "next lint && npm run i18n:check",
+    "i18n:check": "node scripts/check-i18n-hardcoded.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "seed": "node --env-file=.env.local --import tsx scripts/seed-tours.ts",
+    "tours:sync-locales": "node --env-file=.env.local --import tsx scripts/backfill-tour-locales.ts"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^6.4.10",
+    "@mui/material": "^6.4.10",
+    "@mui/material-nextjs": "^6.4.10",
+    "firebase-admin": "^13.4.0",
+    "next": "^15.2.4",
+    "next-intl": "^4.0.0",
+    "qrcode.react": "^4.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@types/node": "25.3.5",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.22.0",
+    "eslint-config-next": "^15.2.4",
+    "tsx": "^4.19.3",
+    "typescript": "5.9.3",
+    "vitest": "^3.0.8"
+  }
+}
