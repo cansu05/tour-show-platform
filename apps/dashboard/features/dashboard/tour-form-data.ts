@@ -1,4 +1,4 @@
-import {TOUR_REGIONS} from '@shared/index';
+﻿import {TOUR_REGIONS} from '@shared/index';
 import type {Tour, TourDocument, TourParticipantRules, TourRegionPricing} from '@/types/tour';
 import type {TourLifecycleStatus} from '@/features/dashboard/admin-data';
 import {slugify} from '@/utils/slug';
@@ -68,10 +68,7 @@ export const DASHBOARD_INITIAL_FORM: DashboardTourInput = {
 };
 
 function splitMultiline(value: string) {
-  return value
-    .split(/\r?\n/)
-    .map((entry) => entry.trim())
-    .filter(Boolean);
+  return value.split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
 }
 
 function resolveFormCoverImage(coverImage: string, gallery: string[]) {
@@ -110,11 +107,7 @@ function buildRegionPricing(regions: DashboardTourInput['regions']) {
       return acc;
     }
 
-    acc[regionKey] = {
-      adultPrice,
-      childPrice,
-      availableDays
-    };
+    acc[regionKey] = {adultPrice, childPrice, availableDays};
     return acc;
   }, {});
 }
@@ -123,7 +116,27 @@ export function normalizeDashboardSlug(value: string) {
   return slugify(value);
 }
 
+export function validateDashboardTourInput(input: DashboardTourInput): void {
+  const title = input.title.trim();
+  const shortDescription = input.shortDescription.trim();
+  const description = input.description.trim();
+  const gallery = splitMultiline(input.gallery);
+  const coverImage = resolveFormCoverImage(input.coverImage, gallery);
+  const byRegion = buildRegionPricing(input.regions);
+  const isDraft = input.publishState === 'draft';
+
+  if (!normalizeDashboardSlug(input.slug || input.title)) throw new Error('Geçerli bir slug üretilemedi.');
+  if (!title) throw new Error('Tur adı zorunludur.');
+  if (!isDraft && !shortDescription) throw new Error('Kısa açıklama zorunludur.');
+  if (!isDraft && !description) throw new Error('Detaylı açıklama zorunludur.');
+  if (!isDraft && !coverImage) throw new Error('Kapak görseli zorunludur.');
+  if (!isDraft && input.categories.length === 0) throw new Error('En az bir kategori seçin.');
+  if (!isDraft && Object.keys(byRegion).length === 0) throw new Error('En az bir bölge için fiyat veya gün bilgisi girin.');
+}
+
 export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): TourDocument {
+  validateDashboardTourInput(input);
+
   const slug = normalizeDashboardSlug(input.slug || input.title);
   const title = input.title.trim();
   const shortDescription = input.shortDescription.trim();
@@ -134,15 +147,6 @@ export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): 
   const importantNotes = input.importantNotes.map((entry) => entry.trim()).filter(Boolean);
   const keywords = input.keywords.map((entry) => entry.trim()).filter(Boolean);
   const byRegion = buildRegionPricing(input.regions);
-  const isDraft = input.publishState === 'draft';
-
-  if (!slug) throw new Error('Slug zorunludur.');
-  if (!title) throw new Error('Tur adı zorunludur.');
-  if (!isDraft && !shortDescription) throw new Error('Kısa açıklama zorunludur.');
-  if (!isDraft && !description) throw new Error('Detaylı açıklama zorunludur.');
-  if (!isDraft && !coverImage) throw new Error('Kapak görseli zorunludur.');
-  if (!isDraft && input.categories.length === 0) throw new Error('En az bir kategori seçin.');
-  if (!isDraft && Object.keys(byRegion).length === 0) throw new Error('En az bir bölge için fiyat veya gün bilgisi girin.');
 
   return {
     slug,
@@ -152,10 +156,7 @@ export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): 
     hasTransfer: input.hasTransfer,
     hasMeal: input.hasMeal,
     campaignPrice: parseOptionalNumber(input.campaignPrice),
-    pricing: {
-      currency: input.currency.trim() || 'EUR',
-      byRegion
-    },
+    pricing: {currency: input.currency.trim() || 'EUR', byRegion},
     participantRules: buildParticipantRules(input.participantRules),
     coverImage,
     gallery,
@@ -228,3 +229,4 @@ export function buildDuplicateTourForm(tour: Tour): DashboardTourInput {
     publishState: 'draft'
   };
 }
+

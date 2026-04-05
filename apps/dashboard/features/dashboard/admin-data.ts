@@ -1,4 +1,4 @@
-import type {Tour, TourDocument} from '@/types/tour';
+﻿import type {Tour, TourDocument} from '@/types/tour';
 
 export type TourLifecycleStatus = 'active' | 'draft' | 'passive';
 
@@ -75,16 +75,14 @@ export function buildTourDocumentFromExistingTour(tour: Tour, overrides: Partial
 }
 
 export function getDashboardOverview(tours: Tour[]) {
-  const sorted = [...tours].sort((left, right) => +new Date(right.updatedAt) - +new Date(left.updatedAt));
-  const activeTours = tours.filter((tour) => getTourHealth(tour).status === 'active');
-  const draftTours = tours.filter((tour) => getTourHealth(tour).status === 'draft');
-  const passiveTours = tours.filter((tour) => getTourHealth(tour).status === 'passive');
+  const toursWithHealth = tours.map((tour) => ({tour, ...getTourHealth(tour)}));
+  const sorted = [...toursWithHealth].sort((left, right) => +new Date(right.tour.updatedAt) - +new Date(left.tour.updatedAt));
+  const activeTours = toursWithHealth.filter((item) => item.status === 'active');
+  const draftTours = toursWithHealth.filter((item) => item.status === 'draft');
+  const passiveTours = toursWithHealth.filter((item) => item.status === 'passive');
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const updatedThisWeek = tours.filter((tour) => +new Date(tour.updatedAt) >= weekAgo);
-  const attentionTours = sorted
-    .map((tour) => ({tour, ...getTourHealth(tour)}))
-    .filter((item) => item.issues.length > 0)
-    .slice(0, 5);
+  const attentionTours = sorted.filter((item) => item.issues.length > 0).slice(0, 5);
 
   return {
     totals: {
@@ -94,8 +92,9 @@ export function getDashboardOverview(tours: Tour[]) {
       passive: passiveTours.length,
       updatedThisWeek: updatedThisWeek.length
     },
-    lastUpdatedAt: sorted[0]?.updatedAt,
-    recentTours: sorted.slice(0, 5).map((tour) => ({tour, ...getTourHealth(tour)})),
+    lastUpdatedAt: sorted[0]?.tour.updatedAt,
+    recentTours: sorted.slice(0, 5),
     attentionTours
   };
 }
+

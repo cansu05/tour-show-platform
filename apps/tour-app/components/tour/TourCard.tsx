@@ -10,6 +10,7 @@ import type {Tour} from '@/types/tour';
 import {Link} from '@/i18n/navigation';
 import type {AppLocale} from '@/constants/locales';
 import {getTourPriceSummary} from '@/utils/tour-pricing';
+import {isUploadedTourAsset} from '@/utils/media';
 
 type Props = {
   tour: Tour;
@@ -20,6 +21,7 @@ export function TourCard({tour, locale}: Props) {
   const tTour = useTranslations('tour');
   const [isNavigating, setIsNavigating] = useState(false);
   const priceSummary = getTourPriceSummary(tour.pricing, tour.campaignPrice);
+  const useUnoptimizedImage = isUploadedTourAsset(tour.coverImage);
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
@@ -60,6 +62,7 @@ export function TourCard({tour, locale}: Props) {
               src={tour.coverImage}
               alt={tour.title}
               fill
+              unoptimized={useUnoptimizedImage}
               sizes="(max-width: 900px) 100vw, (max-width: 1536px) 50vw, 33vw"
               style={{objectFit: 'cover'}}
             />

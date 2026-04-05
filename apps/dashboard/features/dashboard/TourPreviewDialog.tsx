@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
@@ -60,8 +60,7 @@ export function TourPreviewDialog({
     [],
   );
   const regionLabelMap = useMemo<Record<string, string>>(
-    () =>
-      Object.fromEntries(TOUR_REGIONS.map((region) => [region.key, region.label])),
+    () => Object.fromEntries(TOUR_REGIONS.map((region) => [region.key, region.label])),
     [],
   );
   const mediaItems = useMemo<MediaItem[]>(() => {
@@ -128,17 +127,9 @@ export function TourPreviewDialog({
               <div className="relative h-72 w-full bg-panel-subtle sm:h-[28rem]">
                 {activeMedia ? (
                   activeMedia.type === "video" ? (
-                    <video
-                      src={activeMedia.src}
-                      controls
-                      className="h-full w-full bg-black object-contain"
-                    />
+                    <video src={activeMedia.src} controls className="h-full w-full bg-black object-contain" />
                   ) : (
-                    <img
-                      src={activeMedia.src}
-                      alt={preview.title}
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={activeMedia.src} alt={preview.title} className="h-full w-full object-cover" />
                   )
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_55%),linear-gradient(135deg,_#f8fafc,_#e2e8f0)] text-ink-muted">
@@ -149,10 +140,7 @@ export function TourPreviewDialog({
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[rgba(15,23,42,0.72)] to-transparent p-6 text-white">
                   <div className="flex flex-wrap gap-2">
                     {preview.categories.map((item) => (
-                      <span
-                        key={`${preview.slug}-preview-${item}`}
-                        className="rounded-full border border-white/30 bg-white/15 px-3 py-1 text-xs font-semibold"
-                      >
+                      <span key={`${preview.slug}-preview-${item}`} className="rounded-full border border-white/30 bg-white/15 px-3 py-1 text-xs font-semibold">
                         {item}
                       </span>
                     ))}
@@ -163,26 +151,13 @@ export function TourPreviewDialog({
               {mediaItems.length > 0 ? (
                 <div className="flex gap-3 overflow-x-auto border-t border-line px-5 py-4">
                   {mediaItems.map((item, index) => (
-                    <button
-                      key={`${item.type}-${item.src}-${index}`}
-                      type="button"
-                      onClick={() => setActiveMediaIndex(index)}
-                      className={`relative h-20 w-28 shrink-0 overflow-hidden rounded-[18px] border transition ${
-                        index === activeMediaIndex
-                          ? "border-brand shadow-[0_10px_24px_rgba(79,70,229,0.18)]"
-                          : "border-line"
-                      }`}
-                    >
+                    <button key={`${item.type}-${item.src}-${index}`} type="button" onClick={() => setActiveMediaIndex(index)} className={`relative h-20 w-28 shrink-0 overflow-hidden rounded-[18px] border transition ${index === activeMediaIndex ? "border-brand shadow-[0_10px_24px_rgba(79,70,229,0.18)]" : "border-line"}`}>
                       {item.type === "video" ? (
                         <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,#0f172a,#334155)] text-white">
                           <PlayCircleOutlineRoundedIcon sx={{ fontSize: 28 }} />
                         </div>
                       ) : (
-                        <img
-                          src={item.src}
-                          alt={`${preview.title} medya ${index + 1}`}
-                          className="h-full w-full object-cover"
-                        />
+                        <img src={item.src} alt={`${preview.title} medya ${index + 1}`} className="h-full w-full object-cover" />
                       )}
                     </button>
                   ))}
@@ -196,107 +171,41 @@ export function TourPreviewDialog({
               </p>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[20px] bg-panel-subtle p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">
-                    Transfer
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-ink">
-                    {preview.hasTransfer ? "Var" : "Yok"}
-                  </p>
-                </div>
-                <div className="rounded-[20px] bg-panel-subtle p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">
-                    Yemek
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-ink">
-                    {preview.hasMeal ? "Var" : "Yok"}
-                  </p>
-                </div>
-                <div className="rounded-[20px] bg-panel-subtle p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">
-                    Video
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-ink">
-                    {preview.videoUrl ? "Var" : "Yok"}
-                  </p>
-                </div>
-                <div className="rounded-[20px] bg-panel-subtle p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">
-                    Galeri
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-ink">
-                    {preview.gallery.length} görsel
-                  </p>
-                </div>
+                <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Transfer</p><p className="mt-2 text-sm font-medium text-ink">{preview.hasTransfer ? "Var" : "Yok"}</p></div>
+                <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Yemek</p><p className="mt-2 text-sm font-medium text-ink">{preview.hasMeal ? "Var" : "Yok"}</p></div>
+                <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Video</p><p className="mt-2 text-sm font-medium text-ink">{preview.videoUrl ? "Var" : "Yok"}</p></div>
+                <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Galeri</p><p className="mt-2 text-sm font-medium text-ink">{preview.gallery.length} görsel</p></div>
               </div>
 
               <div className="space-y-3 border-t border-line pt-5">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">
-                    Fiyat ve Günler
-                  </p>
-                  {preview.currency ? (
-                    <span className="text-xs font-medium text-ink-muted">
-                      Para birimi: {preview.currency}
-                    </span>
-                  ) : null}
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Fiyat ve Günler</p>
+                  {preview.currency ? <span className="text-xs font-medium text-ink-muted">Para birimi: {preview.currency}</span> : null}
                 </div>
                 {preview.pricingByRegion.length > 0 ? (
                   <div className="space-y-3">
                     {preview.pricingByRegion.map((region) => (
-                      <div
-                        key={region.regionKey}
-                        className="rounded-[20px] bg-panel-subtle p-4"
-                      >
+                      <div key={region.regionKey} className="rounded-[20px] bg-panel-subtle p-4">
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <p className="text-sm font-semibold text-ink">
-                            {regionLabelMap[region.regionKey] || region.regionKey}
-                          </p>
+                          <p className="text-sm font-semibold text-ink">{regionLabelMap[region.regionKey] || region.regionKey}</p>
                           <div className="flex flex-wrap gap-3 text-sm font-medium text-ink">
-                            <span>
-                              Yetişkin:{" "}
-                              {region.adultPrice !== undefined
-                                ? `${region.adultPrice} ${preview.currency || ""}`.trim()
-                                : "-"}
-                            </span>
-                            <span>
-                              Çocuk:{" "}
-                              {region.childPrice !== undefined
-                                ? `${region.childPrice} ${preview.currency || ""}`.trim()
-                                : "-"}
-                            </span>
+                            <span>Yetişkin: {region.adultPrice !== undefined ? `${region.adultPrice} ${preview.currency || ""}`.trim() : "-"}</span>
+                            <span>Çocuk: {region.childPrice !== undefined ? `${region.childPrice} ${preview.currency || ""}`.trim() : "-"}</span>
                           </div>
                         </div>
                         <div className="mt-3 flex flex-wrap gap-2">
-                          {region.availableDays.length > 0 ? (
-                            region.availableDays.map((dayKey) => (
-                              <span
-                                key={`${region.regionKey}-${dayKey}`}
-                                className="rounded-full border border-line bg-white px-3 py-1 text-xs font-medium text-ink-soft"
-                              >
-                                {dayLabelMap[dayKey] || dayKey}
-                              </span>
-                            ))
-                          ) : (
-                            <span className="text-sm text-ink-muted">
-                              Gün seçilmemiş
-                            </span>
-                          )}
+                          {region.availableDays.length > 0 ? region.availableDays.map((dayKey) => <span key={`${region.regionKey}-${dayKey}`} className="rounded-full border border-line bg-white px-3 py-1 text-xs font-medium text-ink-soft">{dayLabelMap[dayKey] || dayKey}</span>) : <span className="text-sm text-ink-muted">Gün seçilmemiş</span>}
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="rounded-[20px] bg-panel-subtle p-4 text-sm text-ink-muted">
-                    Henüz fiyat veya gün bilgisi girilmemiş.
-                  </div>
+                  <div className="rounded-[20px] bg-panel-subtle p-4 text-sm text-ink-muted">Henüz fiyat veya gün bilgisi girilmemiş.</div>
                 )}
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-sm text-ink-muted">
-                <span>
-                  {preview.updatedAt ? `Son güncelleme ${preview.updatedAt}` : "Henüz kaydedilmedi"}
-                </span>
+                <span>{preview.updatedAt ? `Son güncelleme ${preview.updatedAt}` : "Henüz kaydedilmedi"}</span>
                 <span>{preview.isActive ? "Yayında" : "Yayında değil"}</span>
               </div>
             </div>
@@ -306,3 +215,4 @@ export function TourPreviewDialog({
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+﻿import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {DashboardShell} from '@/features/dashboard/DashboardShell';
 import {TourDashboardForm} from '@/features/dashboard/TourDashboardForm';
 import {buildDuplicateTourForm} from '@/features/dashboard/tour-form-data';
@@ -23,7 +23,7 @@ export default async function NewTourPage({searchParams}: {searchParams?: Promis
       }
       meta={
         <>
-          <Pill>Section-based form</Pill>
+          <Pill>Bölümlenmiş form</Pill>
           <Pill>Taslak, önizleme ve yayın akışı</Pill>
         </>
       }
@@ -32,3 +32,4 @@ export default async function NewTourPage({searchParams}: {searchParams?: Promis
     </DashboardShell>
   );
 }
+

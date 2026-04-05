@@ -1,5 +1,16 @@
 import type {ReactNode} from 'react';
 import type {TourLifecycleStatus} from '@/features/dashboard/admin-data';
+import type {
+  ButtonClassNameOptions,
+  EmptyStateProps,
+  InputShellProps,
+  PageHeaderProps,
+  PillProps,
+  SectionCardProps,
+  StatCardProps,
+  StatusBadgeProps,
+  StickyFormActionsProps
+} from '@/features/dashboard/components/admin-ui.types';
 
 export function cn(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(' ');
@@ -8,10 +19,7 @@ export function cn(...values: Array<string | false | null | undefined>) {
 export function buttonClassName({
   variant = 'secondary',
   size = 'md'
-}: {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
-  size?: 'sm' | 'md';
-}) {
+}: ButtonClassNameOptions) {
   return cn(
     'inline-flex items-center justify-center gap-2 rounded-[16px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 disabled:pointer-events-none disabled:opacity-50',
     size === 'sm' ? 'h-10 px-3.5 text-sm' : 'h-11 px-4 text-sm',
@@ -28,13 +36,7 @@ export function PageHeader({
   description,
   actions,
   meta
-}: {
-  eyebrow: string;
-  title: string;
-  description: string;
-  actions?: ReactNode;
-  meta?: ReactNode;
-}) {
+}: PageHeaderProps) {
   return (
     <header className="overflow-hidden rounded-[32px] border border-line bg-[linear-gradient(145deg,rgba(255,255,255,0.98),rgba(237,242,247,0.96))] px-6 py-6 shadow-[0_24px_48px_rgba(15,23,42,0.06)] sm:px-7">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
@@ -58,13 +60,7 @@ export function StatCard({
   icon,
   meta,
   tone = 'default'
-}: {
-  label: string;
-  value: ReactNode;
-  icon: ReactNode;
-  meta?: ReactNode;
-  tone?: 'default' | 'brand' | 'warning';
-}) {
+}: StatCardProps) {
   return (
     <section
       className={cn(
@@ -99,13 +95,7 @@ export function SectionCard({
   action,
   children,
   compact = false
-}: {
-  title: string;
-  description?: string;
-  action?: ReactNode;
-  children: ReactNode;
-  compact?: boolean;
-}) {
+}: SectionCardProps) {
   return (
     <section className={cn('rounded-[28px] border border-line bg-panel shadow-[0_16px_36px_rgba(15,23,42,0.05)]', compact ? 'p-4' : 'p-5 sm:p-6')}>
       <div className="flex flex-col gap-4">
@@ -122,7 +112,7 @@ export function SectionCard({
   );
 }
 
-export function StatusBadge({status}: {status: TourLifecycleStatus}) {
+export function StatusBadge({status}: StatusBadgeProps) {
   const labels = {
     active: 'Aktif',
     draft: 'Taslak',
@@ -149,13 +139,7 @@ export function InputShell({
   error,
   htmlFor,
   children
-}: {
-  label: string;
-  hint?: string;
-  error?: string;
-  htmlFor?: string;
-  children: ReactNode;
-}) {
+}: InputShellProps) {
   return (
     <label className="flex flex-col gap-2.5" htmlFor={htmlFor}>
       <div className="space-y-1">
@@ -175,7 +159,7 @@ export function textInputClassName(hasError = false) {
   );
 }
 
-export function Pill({children}: {children: ReactNode}) {
+export function Pill({children}: PillProps) {
   return <span className="inline-flex items-center rounded-full border border-line bg-panel px-3 py-1.5 text-xs font-medium text-ink-soft">{children}</span>;
 }
 
@@ -183,11 +167,7 @@ export function EmptyState({
   title,
   description,
   action
-}: {
-  title: string;
-  description: string;
-  action?: ReactNode;
-}) {
+}: EmptyStateProps) {
   return (
     <div className="rounded-[24px] border border-dashed border-line-strong bg-panel-subtle px-6 py-10 text-center">
       <div className="mx-auto max-w-md space-y-2">
@@ -201,9 +181,7 @@ export function EmptyState({
 
 export function StickyFormActions({
   children
-}: {
-  children: ReactNode;
-}) {
+}: StickyFormActionsProps) {
   return (
     <div className="sticky bottom-4 z-20 rounded-[24px] border border-line bg-white/92 p-3 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">{children}</div>

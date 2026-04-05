@@ -1,4 +1,4 @@
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+﻿import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import {notFound} from 'next/navigation';
 import {DashboardShell} from '@/features/dashboard/DashboardShell';
 import {TourDashboardForm} from '@/features/dashboard/TourDashboardForm';
@@ -39,3 +39,4 @@ export default async function EditTourPage({params}: {params: Promise<{slug: str
     </DashboardShell>
   );
 }
+

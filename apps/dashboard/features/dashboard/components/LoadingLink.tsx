@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import type {AnchorHTMLAttributes, ReactNode, MouseEvent} from 'react';
+import type {AnchorHTMLAttributes, MouseEvent, ReactNode} from 'react';
 import {useEffect, useState} from 'react';
 import type {Route} from 'next';
 import Link from 'next/link';
@@ -58,13 +58,7 @@ export function LoadingLink({
   };
 
   return (
-    <Link
-      href={href as Route}
-      onClick={handleClick}
-      aria-busy={isPending}
-      className={cn('relative', className, isPending && 'pointer-events-none')}
-      {...props}
-    >
+    <Link href={href as Route} onClick={handleClick} aria-busy={isPending} className={cn('relative', className, isPending && 'pointer-events-none')} {...props}>
       {children}
       {isPending ? (
         <span className="absolute inset-0 flex items-center justify-center rounded-[inherit] bg-white/75 backdrop-blur-[1px]">
@@ -77,3 +71,4 @@ export function LoadingLink({
     </Link>
   );
 }
+

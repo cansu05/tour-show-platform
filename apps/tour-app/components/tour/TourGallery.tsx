@@ -1,12 +1,14 @@
 'use client';
 
 import {useMemo, useState} from 'react';
-import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import {Box, Dialog, IconButton, Stack, Typography} from '@mui/material';
 import Image from 'next/image';
 import {useTranslations} from 'next-intl';
+import {isUploadedTourAsset} from '@/utils/media';
 
 type GalleryItem =
   | {type: 'image'; src: string}
@@ -32,6 +34,7 @@ export function TourGallery({images, alt, videoUrl}: Props) {
   const [open, setOpen] = useState(false);
 
   const currentItem = source[index];
+  const useUnoptimizedImage = currentItem?.type === 'image' && isUploadedTourAsset(currentItem.src);
 
   const go = (dir: 'prev' | 'next') => {
     setIndex((prev) => {
@@ -58,6 +61,7 @@ export function TourGallery({images, alt, videoUrl}: Props) {
               alt={alt}
               fill
               priority={index === 0}
+              unoptimized={Boolean(useUnoptimizedImage)}
               sizes="(max-width: 900px) 100vw, 70vw"
               style={{objectFit: 'cover'}}
             />
@@ -85,6 +89,7 @@ export function TourGallery({images, alt, videoUrl}: Props) {
               src={currentItem?.type === 'image' ? currentItem.src : 'https://picsum.photos/1200/800?random=99'}
               alt={alt}
               fill
+              unoptimized={Boolean(useUnoptimizedImage)}
               sizes="100vw"
               style={{objectFit: 'contain'}}
             />
@@ -106,7 +111,9 @@ export function TourGallery({images, alt, videoUrl}: Props) {
           <Typography sx={{position: 'absolute', bottom: 18, left: '50%', transform: 'translateX(-50%)', color: 'white', fontWeight: 700}}>
             {`${index + 1} / ${source.length}`}
           </Typography>
-          <IconButton aria-label={tTour('closeGallery')} onClick={() => setOpen(false)} sx={{position: 'absolute', top: 16, right: 16, color: 'white'}}>×</IconButton>
+          <IconButton aria-label={tTour('closeGallery')} onClick={() => setOpen(false)} sx={{position: 'absolute', top: 16, right: 16, color: 'white'}}>
+            <CloseRoundedIcon />
+          </IconButton>
         </Box>
       </Dialog>
     </Stack>
