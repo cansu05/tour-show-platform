@@ -1,7 +1,13 @@
 import type {Tour, TourDocument, TourLocalizedContent} from '@/types/tour';
 import {getTourPriceSummary} from '@/utils/tour-pricing';
 
-const PLACEHOLDER_IMAGE = '/images/aquarium/aquarium-cover.webp';
+const PLACEHOLDER_IMAGE = 'https://picsum.photos/1200/800?random=99';
+
+function normalizeOptionalString(value: unknown) {
+  if (typeof value !== 'string') return undefined;
+  const trimmedValue = value.trim();
+  return trimmedValue.length > 0 ? trimmedValue : undefined;
+}
 
 function toIsoString(value: unknown): string {
   if (!value) return new Date().toISOString();
@@ -23,30 +29,6 @@ function parsePublishState(value: unknown): Tour['publishState'] {
   return value === 'active' || value === 'draft' || value === 'passive' ? value : undefined;
 }
 
-function inferImages(slug: string) {
-  if (slug === 'aquarium-antalya' || slug === 'aquarium-antalya-evening') {
-    return {
-      coverImage: '/images/aquarium/aquarium-cover.webp',
-      gallery: [
-        '/images/aquarium/aquarium-1.webp',
-        '/images/aquarium/aquarium-2.webp',
-        '/images/aquarium/aquarium-3.webp',
-        '/images/aquarium/aquarium-4.webp',
-        '/images/aquarium/aquarium-5.webp',
-        '/images/aquarium/aquarium-6.webp',
-        '/images/aquarium/aquarium-7.webp',
-        '/images/aquarium/aquarium-8.webp',
-        '/images/kuyumcu.webp'
-      ]
-    };
-  }
-
-  return {
-    coverImage: PLACEHOLDER_IMAGE,
-    gallery: []
-  };
-}
-
 function pickBaseContent(localized: Tour['localized']): TourLocalizedContent | undefined {
   if (!localized) return undefined;
   return localized.de || localized.en || localized.tr;
@@ -56,10 +38,13 @@ export function mapTourDocument(raw: TourDocument, idFallback: string): Tour | n
   if (!raw.slug) return null;
 
   const fallbackContent = pickBaseContent(raw.localized);
-  const inferredImages = inferImages(raw.slug);
+  const gallery = stringArray(raw.gallery);
   const title = fallbackContent?.title || raw.title || raw.slug;
   const shortDescription = fallbackContent?.shortDescription || raw.shortDescription || '';
   const priceSummary = getTourPriceSummary(raw.pricing, raw.campaignPrice);
+
+  const coverImage = normalizeOptionalString(raw.coverImage) || gallery[0] || PLACEHOLDER_IMAGE;
+  const videoUrl = normalizeOptionalString(raw.videoUrl);
 
   return {
     id: raw.id ?? idFallback,
@@ -72,9 +57,9 @@ export function mapTourDocument(raw: TourDocument, idFallback: string): Tour | n
     campaignPrice: typeof raw.campaignPrice === 'number' ? raw.campaignPrice : undefined,
     pricing: raw.pricing || {currency: 'EUR', byRegion: {}},
     participantRules: raw.participantRules,
-    coverImage: raw.coverImage || inferredImages.coverImage,
-    gallery: stringArray(raw.gallery).length ? stringArray(raw.gallery) : inferredImages.gallery,
-    videoUrl: typeof raw.videoUrl === 'string' ? raw.videoUrl : undefined,
+    coverImage,
+    gallery,
+    videoUrl,
     localized: raw.localized,
     title,
     shortDescription,

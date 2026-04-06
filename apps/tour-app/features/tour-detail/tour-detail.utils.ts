@@ -1,7 +1,13 @@
 import type {Tour} from '@/types/tour';
 
 export function buildTourImageSet(tour: Tour) {
-  return Array.from(new Set([tour.coverImage, ...tour.gallery].filter(Boolean)));
+  return Array.from(
+    new Set(
+      [tour.coverImage, ...tour.gallery]
+        .map((value) => value.trim())
+        .filter(Boolean)
+    )
+  );
 }
 
 export function getTourDetailFlags(tour: Tour) {

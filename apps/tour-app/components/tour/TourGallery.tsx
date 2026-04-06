@@ -20,15 +20,23 @@ type Props = {
   videoUrl?: string;
 };
 
+function normalizeMediaSrc(value?: string) {
+  if (typeof value !== 'string') return undefined;
+  const trimmedValue = value.trim();
+  return trimmedValue.length > 0 ? trimmedValue : undefined;
+}
+
 export function TourGallery({images, alt, videoUrl}: Props) {
   const tTour = useTranslations('tour');
   const source = useMemo<GalleryItem[]>(() => {
-    const imageItems = (images.length ? images : ['https://picsum.photos/1200/800?random=99']).map((src) => ({
+    const normalizedImages = images.map((src) => src.trim()).filter(Boolean);
+    const imageItems = (normalizedImages.length ? normalizedImages : ['https://picsum.photos/1200/800?random=99']).map((src) => ({
       type: 'image' as const,
       src
     }));
+    const normalizedVideoUrl = normalizeMediaSrc(videoUrl);
 
-    return videoUrl ? [...imageItems, {type: 'video', src: videoUrl}] : imageItems;
+    return normalizedVideoUrl ? [...imageItems, {type: 'video', src: normalizedVideoUrl}] : imageItems;
   }, [images, videoUrl]);
   const [index, setIndex] = useState(0);
   const [open, setOpen] = useState(false);

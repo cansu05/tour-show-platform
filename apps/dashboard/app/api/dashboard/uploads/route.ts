@@ -1,5 +1,4 @@
-import {existsSync} from 'node:fs';
-import {mkdir, writeFile} from 'node:fs/promises';
+import {createHash, randomUUID} from 'node:crypto';
 import path from 'node:path';
 import {NextResponse} from 'next/server';
 
@@ -37,17 +36,17 @@ class UploadValidationError extends Error {
   }
 }
 
-function resolveTourAppPublicRoot() {
-  const candidates = [
-    path.resolve(process.cwd(), 'apps', 'tour-app', 'public'),
-    path.resolve(process.cwd(), '..', 'tour-app', 'public')
-  ];
+function getCloudinaryConfig() {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-  const match = candidates.find((candidate) => existsSync(candidate));
-  return match ?? candidates[0];
+  if (!cloudName || !apiKey || !apiSecret) {
+    return null;
+  }
+
+  return {cloudName, apiKey, apiSecret};
 }
-
-const TOUR_APP_PUBLIC_ROOT = resolveTourAppPublicRoot();
 
 function sanitizeSegment(value: string) {
   return value
@@ -106,34 +105,67 @@ function validateFiles(kind: UploadKind, files: File[]) {
   const rules = ACCEPTED_FILE_RULES[kind];
 
   if (files.length > rules.maxFiles) {
-    throw new UploadValidationError(kind === 'gallery' ? 'Çok fazla dosya seçildi.' : 'Bu alan tek dosya kabul eder.');
+    throw new UploadValidationError(kind === 'gallery' ? 'Cok fazla dosya secildi.' : 'Bu alan tek dosya kabul eder.');
   }
 
   for (const file of files) {
     const extension = getExtension(file.name);
     const hasAcceptedMime = rules.mimePrefixes.some((prefix) => file.type.startsWith(prefix));
     if (!hasAcceptedMime || !rules.extensions.has(extension)) {
-      throw new UploadValidationError('Desteklenmeyen dosya türü.');
+      throw new UploadValidationError('Desteklenmeyen dosya turu.');
     }
 
     if (file.size > rules.maxSize) {
-      throw new UploadValidationError(kind === 'video' ? 'Video boyutu sınırı aşıldı.' : 'Görsel boyutu sınırı aşıldı.');
+      throw new UploadValidationError(kind === 'video' ? 'Video boyutu siniri asildi.' : 'Gorsel boyutu siniri asildi.');
     }
   }
 }
 
-async function buildUniqueFilePath(targetDir: string, baseName: string, extension: string) {
-  let suffix = 0;
-  let fileName = `${baseName}${extension}`;
-  let filePath = path.join(targetDir, fileName);
+function createCloudinarySignature(params: Record<string, string>, apiSecret: string) {
+  const payload = Object.entries(params)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
 
-  while (existsSync(filePath)) {
-    suffix += 1;
-    fileName = `${baseName}-${suffix}${extension}`;
-    filePath = path.join(targetDir, fileName);
+  return createHash('sha1')
+    .update(`${payload}${apiSecret}`)
+    .digest('hex');
+}
+
+async function saveToCloudinary(slug: string, kind: UploadKind, index: number, file: File) {
+  const config = getCloudinaryConfig();
+
+  if (!config) {
+    return null;
   }
 
-  return {fileName, filePath};
+  const timestamp = Math.floor(Date.now() / 1000).toString();
+  const folder = `tour-show/tours/${slug}`;
+  const publicId = `${getBaseName(kind, slug, index)}-${randomUUID()}`;
+  const signature = createCloudinarySignature({folder, public_id: publicId, timestamp}, config.apiSecret);
+  const formData = new FormData();
+
+  formData.append('file', file);
+  formData.append('api_key', config.apiKey);
+  formData.append('timestamp', timestamp);
+  formData.append('folder', folder);
+  formData.append('public_id', publicId);
+  formData.append('signature', signature);
+
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/auto/upload`, {
+    method: 'POST',
+    body: formData
+  });
+
+  const result = (await response.json().catch(() => null)) as
+    | {secure_url?: string; error?: {message?: string}}
+    | null;
+
+  if (!response.ok || !result?.secure_url) {
+    throw new Error(result?.error?.message || 'Cloudinary yuklemesi basarisiz oldu.');
+  }
+
+  return result.secure_url;
 }
 
 export async function POST(request: Request) {
@@ -148,32 +180,30 @@ export async function POST(request: Request) {
     }
 
     if (!kind) {
-      return NextResponse.json({message: 'Geçersiz yükleme türü.'}, {status: 400});
+      return NextResponse.json({message: 'Gecersiz yukleme turu.'}, {status: 400});
     }
 
     if (files.length === 0) {
-      return NextResponse.json({message: 'Yüklenecek dosya bulunamadı.'}, {status: 400});
+      return NextResponse.json({message: 'Yuklenecek dosya bulunamadi.'}, {status: 400});
+    }
+
+    if (!getCloudinaryConfig()) {
+      return NextResponse.json({message: 'Cloudinary ayarlari eksik.'}, {status: 500});
     }
 
     validateFiles(kind, files);
 
-    const targetDir = path.join(TOUR_APP_PUBLIC_ROOT, 'images', 'tours', slug);
-    await mkdir(targetDir, {recursive: true});
-
     const savedFiles = await Promise.all(
       files.map(async (file, index) => {
         const extension = getExtension(file.name);
-        const {fileName, filePath} = await buildUniqueFilePath(targetDir, getBaseName(kind, slug, index), extension);
         const arrayBuffer = await file.arrayBuffer();
         const bytes = new Uint8Array(arrayBuffer);
 
         if (!isLikelyValidFile(bytes, extension)) {
-          throw new UploadValidationError('Dosya içeriği uzantı ile eşleşmiyor.');
+          throw new UploadValidationError('Dosya icerigi uzanti ile eslesmiyor.');
         }
 
-        await writeFile(filePath, Buffer.from(arrayBuffer));
-
-        return `/images/tours/${slug}/${fileName}`;
+        return saveToCloudinary(slug, kind, index, file);
       })
     );
 
@@ -183,6 +213,6 @@ export async function POST(request: Request) {
       return NextResponse.json({message: error.message}, {status: 400});
     }
 
-    return NextResponse.json({message: 'Dosyalar yüklenemedi.'}, {status: 500});
+    return NextResponse.json({message: error instanceof Error ? error.message : 'Dosyalar yuklenemedi.'}, {status: 500});
   }
 }

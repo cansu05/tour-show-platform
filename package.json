@@ -23,8 +23,6 @@
     "i18n:check": "npm --workspace @tour-show/tour-app run i18n:check",
     "typecheck": "npm --workspace @tour-show/tour-app run typecheck && npm --workspace @tour-show/dashboard run typecheck",
     "test": "npm --workspace @tour-show/tour-app run test",
-    "test:watch": "npm --workspace @tour-show/tour-app run test:watch",
-    "seed": "npm --workspace @tour-show/tour-app run seed",
-    "tours:sync-locales": "npm --workspace @tour-show/tour-app run tours:sync-locales"
+    "test:watch": "npm --workspace @tour-show/tour-app run test:watch"
   }
 }

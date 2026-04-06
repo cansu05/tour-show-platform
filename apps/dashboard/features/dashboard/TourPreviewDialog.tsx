@@ -41,11 +41,18 @@ function isAbsoluteMediaUrl(value: string) {
   return /^(https?:\/\/|data:|blob:)/i.test(value);
 }
 
+function normalizeMediaValue(value?: string) {
+  if (typeof value !== "string") return null;
+  const trimmedValue = value.trim();
+  return trimmedValue.length > 0 ? trimmedValue : null;
+}
+
 export function toDashboardMediaUrl(value?: string) {
-  if (!value) return "";
-  if (isAbsoluteMediaUrl(value)) return value;
-  if (!value.startsWith("/")) return value;
-  return `/api/dashboard/media${value}`;
+  const normalizedValue = normalizeMediaValue(value);
+  if (!normalizedValue) return "";
+  if (isAbsoluteMediaUrl(normalizedValue)) return normalizedValue;
+  if (!normalizedValue.startsWith("/")) return normalizedValue;
+  return `/api/dashboard/media${normalizedValue}`;
 }
 
 export function TourPreviewDialog({
@@ -70,8 +77,9 @@ export function TourPreviewDialog({
     const uniqueImages = Array.from(new Set(imageSources));
     const items: MediaItem[] = uniqueImages.map((src) => ({ type: "image", src }));
 
-    if (preview.videoUrl) {
-      items.push({ type: "video", src: toDashboardMediaUrl(preview.videoUrl) });
+    const videoSrc = toDashboardMediaUrl(preview.videoUrl);
+    if (videoSrc) {
+      items.push({ type: "video", src: videoSrc });
     }
 
     return items;

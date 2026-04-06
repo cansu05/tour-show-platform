@@ -31,6 +31,12 @@ export function splitMediaLines(value: string) {
     .filter(Boolean);
 }
 
+function normalizeOptionalMedia(value?: string) {
+  if (typeof value !== 'string') return undefined;
+  const trimmedValue = value.trim();
+  return trimmedValue.length > 0 ? trimmedValue : undefined;
+}
+
 export function getExistingGalleryUrls(items: GalleryMediaItem[]) {
   return items.flatMap((item) => (item.kind === 'existing' ? [item.url] : []));
 }
@@ -132,9 +138,11 @@ export function buildFormPreviewData({
   videoPreviewUrl?: string;
 }): TourPreviewData {
   const slug = normalizeDashboardSlug(form.slug || form.title) || 'taslak-tur';
-  const fallbackGallery = getExistingGalleryUrls(galleryItems);
-  const gallery = galleryPreviewUrls.length > 0 ? galleryPreviewUrls : fallbackGallery;
-  const coverImage = coverPreviewUrl || gallery[0] || form.coverImage || '';
+  const fallbackGallery = getExistingGalleryUrls(galleryItems).map((url) => url.trim()).filter(Boolean);
+  const normalizedPreviewGallery = galleryPreviewUrls.map((url) => url.trim()).filter(Boolean);
+  const gallery = normalizedPreviewGallery.length > 0 ? normalizedPreviewGallery : fallbackGallery;
+  const coverImage = normalizeOptionalMedia(coverPreviewUrl) || gallery[0] || normalizeOptionalMedia(form.coverImage) || '';
+  const videoUrl = normalizeOptionalMedia(videoPreviewUrl) || normalizeOptionalMedia(form.videoUrl);
   const byRegion = Object.entries(form.regions).reduce<Record<string, {adultPrice?: number; childPrice?: number; availableDays?: string[]}>>(
     (acc, [regionKey, region]) => {
       if (!region.enabled) return acc;
@@ -171,7 +179,7 @@ export function buildFormPreviewData({
     },
     coverImage,
     gallery,
-    videoUrl: videoPreviewUrl || form.videoUrl || undefined,
+    videoUrl,
     localized: undefined,
     title: form.title || 'İsimsiz tur',
     shortDescription: form.shortDescription,
@@ -191,7 +199,7 @@ export function buildFormPreviewData({
     shortDescription: form.shortDescription,
     hasTransfer: form.hasTransfer,
     hasMeal: form.hasMeal,
-    videoUrl: videoPreviewUrl || form.videoUrl || undefined,
+    videoUrl,
     coverImage,
     gallery,
     updatedAt: undefined,

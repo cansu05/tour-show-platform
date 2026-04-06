@@ -14,9 +14,7 @@
     "i18n:check": "node scripts/check-i18n-hardcoded.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "seed": "node --env-file=.env.local --import tsx scripts/seed-tours.ts",
-    "tours:sync-locales": "node --env-file=.env.local --import tsx scripts/backfill-tour-locales.ts"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -40,7 +38,6 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9.22.0",
     "eslint-config-next": "^15.2.4",
-    "tsx": "^4.19.3",
     "typescript": "5.9.3",
     "vitest": "^3.0.8"
   },

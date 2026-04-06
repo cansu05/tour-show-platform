@@ -31,9 +31,16 @@ function parsePublishState(value: unknown): Tour['publishState'] {
   return value === 'active' || value === 'draft' || value === 'passive' ? value : undefined;
 }
 
+function normalizeOptionalString(value: unknown) {
+  if (typeof value !== 'string') return undefined;
+  const trimmedValue = value.trim();
+  return trimmedValue.length > 0 ? trimmedValue : undefined;
+}
+
 function resolveDashboardCoverImage(rawCoverImage: unknown, gallery: string[]) {
-  if (typeof rawCoverImage === 'string' && rawCoverImage.trim().length > 0) {
-    return rawCoverImage;
+  const coverImage = normalizeOptionalString(rawCoverImage);
+  if (coverImage) {
+    return coverImage;
   }
 
   return gallery[0] || '';
@@ -70,7 +77,7 @@ function mapDashboardTour(raw: Record<string, unknown>, id: string): Tour | null
     participantRules: raw.participantRules as Tour['participantRules'],
     coverImage: resolveDashboardCoverImage(raw.coverImage, gallery),
     gallery,
-    videoUrl: typeof raw.videoUrl === 'string' ? raw.videoUrl : undefined,
+    videoUrl: normalizeOptionalString(raw.videoUrl),
     localized,
     title,
     shortDescription,

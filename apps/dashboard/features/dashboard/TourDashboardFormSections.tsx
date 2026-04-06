@@ -107,12 +107,13 @@ const ListEditor = memo(function ListEditor({
 
 const MediaPreviewStrip = memo(function MediaPreviewStrip({type, urls}: MediaPreviewStripProps) {
   if (urls.length === 0) return null;
-  const resolvedUrls = urls.map((url) => toDashboardMediaUrl(url));
+  const resolvedUrls = urls.map((url) => toDashboardMediaUrl(url)).filter(Boolean);
+  if (resolvedUrls.length === 0) return null;
 
   return (
     <div className="rounded-[20px] border border-line bg-white p-3">
       <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted">Önizleme</p>
-      <div className={cn('grid gap-3', urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2 xl:grid-cols-3')}>
+      <div className={cn('grid gap-3', resolvedUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2 xl:grid-cols-3')}>
         {resolvedUrls.map((url, index) => (
           <div key={`${url}-${index}`} className="overflow-hidden rounded-[18px] border border-line bg-panel-subtle">
             {type === 'image' ? (
