@@ -41,14 +41,14 @@ import {
   normalizeDashboardSlug,
   validateDashboardTourInput
 } from '@/features/dashboard/tour-form-data';
+import {validateUploadFiles, type SignedUploadPayload} from '@/features/dashboard/uploads';
 import {useObjectUrl, useObjectUrlMap} from '@/features/dashboard/use-object-url-cache';
 
 type JsonMessageResponse = {
-  files?: string[];
   message?: string;
 };
 
-async function readJsonMessageResponse(response: Response): Promise<JsonMessageResponse> {
+async function readJsonMessageResponse<T>(response: Response): Promise<T | JsonMessageResponse> {
   const contentType = response.headers.get('content-type') || '';
   const rawBody = await response.text();
 
@@ -57,20 +57,49 @@ async function readJsonMessageResponse(response: Response): Promise<JsonMessageR
   }
 
   if (contentType.includes('application/json')) {
-    return JSON.parse(rawBody) as JsonMessageResponse;
+    return JSON.parse(rawBody) as T;
   }
 
   const normalizedBody = rawBody.trim();
 
   if (normalizedBody.startsWith('{') || normalizedBody.startsWith('[')) {
     try {
-      return JSON.parse(normalizedBody) as JsonMessageResponse;
+      return JSON.parse(normalizedBody) as T;
     } catch {
       return {message: normalizedBody};
     }
   }
 
   return {message: normalizedBody};
+}
+
+async function uploadFileToCloudinary(
+  cloudName: string,
+  apiKey: string,
+  signedFile: SignedUploadPayload['files'][number],
+  file: File
+) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('api_key', apiKey);
+  formData.append('timestamp', signedFile.timestamp);
+  formData.append('folder', signedFile.folder);
+  formData.append('public_id', signedFile.publicId);
+  formData.append('signature', signedFile.signature);
+
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+    method: 'POST',
+    body: formData
+  });
+  const result = (await response.json().catch(() => null)) as
+    | {secure_url?: string; error?: {message?: string}}
+    | null;
+
+  if (!response.ok || !result?.secure_url) {
+    throw new Error(result?.error?.message || 'Cloudinary yuklemesi basarisiz oldu.');
+  }
+
+  return result.secure_url;
 }
 
 export function TourDashboardForm({
@@ -310,19 +339,25 @@ export function TourDashboardForm({
   }, [initialData]);
 
   const uploadBatch = useCallback(async (slug: string, kind: 'cover' | 'gallery' | 'video', files: File[]) => {
-    const formData = new FormData();
-    formData.append('slug', slug);
-    formData.append('kind', kind);
-    files.forEach((file) => formData.append('files', file));
+    validateUploadFiles(kind, files);
 
-    const response = await fetch('/api/dashboard/uploads', {method: 'POST', body: formData});
-    const data = await readJsonMessageResponse(response);
+    const response = await fetch('/api/dashboard/uploads', {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({
+        slug,
+        kind,
+        files: files.map((file) => ({name: file.name, size: file.size, type: file.type}))
+      })
+    });
+    const data = await readJsonMessageResponse<SignedUploadPayload>(response);
 
-    if (!response.ok || !data.files?.length) {
-      throw new Error(data.message || 'Dosya yuklenemedi.');
+    if (!response.ok || !('files' in data) || !data.files?.length || !('cloudName' in data) || !data.cloudName || !('apiKey' in data) || !data.apiKey) {
+      const message = 'message' in data ? data.message : undefined;
+      throw new Error(message || 'Dosya yuklenemedi.');
     }
 
-    return data.files;
+    return Promise.all(data.files.map((signedFile, index) => uploadFileToCloudinary(data.cloudName, data.apiKey, signedFile, files[index]!)));
   }, []);
 
   const uploadFiles = useCallback(
