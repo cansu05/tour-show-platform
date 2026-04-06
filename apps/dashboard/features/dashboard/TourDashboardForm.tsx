@@ -48,6 +48,31 @@ type JsonMessageResponse = {
   message?: string;
 };
 
+async function readJsonMessageResponse(response: Response): Promise<JsonMessageResponse> {
+  const contentType = response.headers.get('content-type') || '';
+  const rawBody = await response.text();
+
+  if (!rawBody) {
+    return {};
+  }
+
+  if (contentType.includes('application/json')) {
+    return JSON.parse(rawBody) as JsonMessageResponse;
+  }
+
+  const normalizedBody = rawBody.trim();
+
+  if (normalizedBody.startsWith('{') || normalizedBody.startsWith('[')) {
+    try {
+      return JSON.parse(normalizedBody) as JsonMessageResponse;
+    } catch {
+      return {message: normalizedBody};
+    }
+  }
+
+  return {message: normalizedBody};
+}
+
 export function TourDashboardForm({
   initialData = DASHBOARD_INITIAL_FORM,
   mode = 'create',
@@ -291,10 +316,10 @@ export function TourDashboardForm({
     files.forEach((file) => formData.append('files', file));
 
     const response = await fetch('/api/dashboard/uploads', {method: 'POST', body: formData});
-    const data = (await response.json()) as JsonMessageResponse;
+    const data = await readJsonMessageResponse(response);
 
     if (!response.ok || !data.files?.length) {
-      throw new Error(data.message || 'Dosya yüklenemedi.');
+      throw new Error(data.message || 'Dosya yuklenemedi.');
     }
 
     return data.files;
