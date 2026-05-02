@@ -54,6 +54,7 @@ export function mapTourDocument(raw: TourDocument, idFallback: string): Tour | n
     categories: stringArray(raw.categories),
     hasTransfer: Boolean(raw.hasTransfer),
     hasMeal: Boolean(raw.hasMeal),
+    isAdvantage: Boolean(raw.isAdvantage),
     campaignPrice: typeof raw.campaignPrice === 'number' ? raw.campaignPrice : undefined,
     pricing: raw.pricing || {currency: 'EUR', byRegion: {}},
     participantRules: raw.participantRules,

@@ -36,6 +36,7 @@ export type Tour = {
   categories: string[];
   hasTransfer: boolean;
   hasMeal: boolean;
+  isAdvantage?: boolean;
   campaignPrice?: number | null;
   pricing: TourPricing;
   participantRules?: TourParticipantRules;

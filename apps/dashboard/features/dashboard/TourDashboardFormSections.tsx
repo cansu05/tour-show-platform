@@ -414,15 +414,18 @@ export const TranslationSection = memo(function TranslationSection({
 export const ServicesSection = memo(function ServicesSection({
   hasTransfer,
   hasMeal,
+  isAdvantage,
   onToggleTransfer,
-  onToggleMeal
+  onToggleMeal,
+  onToggleAdvantage
 }: ServicesSectionProps) {
   return (
     <section id="services" className="scroll-mt-24">
       <SectionCard title="Hizmet Özellikleri" description="Turun operasyonel özelliklerini görsel olarak açık ve düzenli şekilde seçin.">
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="grid gap-3 lg:grid-cols-3">
           <ToggleCard active={hasTransfer} onClick={onToggleTransfer} title="Transfer dahil" description="Karşılama ve ulaşım hizmeti sunuluyor." />
           <ToggleCard active={hasMeal} onClick={onToggleMeal} title="Yemek dahil" description="Tur paketine yemek veya ikram dahil." />
+          <ToggleCard active={isAdvantage} onClick={onToggleAdvantage} title="Avantajlı ürün" description="Bu ayın avantajlı turları bölümünde listelenir." />
         </div>
       </SectionCard>
     </section>

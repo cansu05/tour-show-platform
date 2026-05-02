@@ -171,6 +171,7 @@ export function buildFormPreviewData({
     categories: form.categories,
     hasTransfer: form.hasTransfer,
     hasMeal: form.hasMeal,
+    isAdvantage: form.isAdvantage,
     campaignPrice: form.campaignPrice.trim() ? Number(form.campaignPrice) : undefined,
     pricing: {currency: form.currency || 'EUR', byRegion},
     participantRules: {

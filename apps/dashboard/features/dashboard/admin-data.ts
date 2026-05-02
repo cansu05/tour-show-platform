@@ -58,6 +58,7 @@ export function buildTourDocumentFromExistingTour(tour: Tour, overrides: Partial
     categories: overrides.categories ?? tour.categories,
     hasTransfer: overrides.hasTransfer ?? tour.hasTransfer,
     hasMeal: overrides.hasMeal ?? tour.hasMeal,
+    isAdvantage: overrides.isAdvantage ?? tour.isAdvantage,
     campaignPrice: overrides.campaignPrice ?? tour.campaignPrice,
     pricing: overrides.pricing ?? tour.pricing,
     participantRules: overrides.participantRules ?? tour.participantRules,

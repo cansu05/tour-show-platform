@@ -54,7 +54,7 @@ function normalizeList(value: unknown) {
   return Array.isArray(value) ? value.map((item) => normalizeText(item)).filter(Boolean) : [];
 }
 
-function normalizeLocalizedPayload(raw: unknown): Partial<Record<AppLocale, TourLocalizedContent>> {
+function normalizeLocalizedPayload(raw: unknown, sourceTitle: string): Partial<Record<AppLocale, TourLocalizedContent>> {
   if (!raw || typeof raw !== 'object') return {};
   const source = raw as Partial<Record<AppLocale, Partial<TourLocalizedContent>>>;
 
@@ -63,7 +63,7 @@ function normalizeLocalizedPayload(raw: unknown): Partial<Record<AppLocale, Tour
     if (!content) return acc;
 
     acc[locale] = {
-      title: normalizeText(content.title),
+      title: sourceTitle,
       shortDescription: normalizeText(content.shortDescription),
       description: normalizeText(content.description),
       thingsToBring: normalizeList(content.thingsToBring),
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: process.env.OPENAI_TRANSLATION_MODEL || 'gpt-4o-mini',
         instructions:
-          'You are a professional tourism content translator. Translate Turkish tour content into the requested locales. Preserve meaning, prices, place names, brand names, numbers, and HTML-free plain text. Keep list lengths aligned with the source lists.',
+          'You are a professional tourism content translator. Translate Turkish tour content into the requested locales, but do not translate the tour title. Keep the title exactly as provided in the source for every locale. Preserve meaning, prices, place names, brand names, numbers, and HTML-free plain text. Keep list lengths aligned with the source lists.',
         input: [
           {
             role: 'user',
@@ -151,7 +151,7 @@ export async function POST(request: Request) {
     }
 
     const outputText = getOutputText(result);
-    const translated = normalizeLocalizedPayload(JSON.parse(outputText)) as TranslateTourResponse['localized'];
+    const translated = normalizeLocalizedPayload(JSON.parse(outputText), source.title.trim()) as TranslateTourResponse['localized'];
 
     return NextResponse.json({localized: translated});
   } catch {

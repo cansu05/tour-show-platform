@@ -72,6 +72,7 @@ function mapDashboardTour(raw: Record<string, unknown>, id: string): Tour | null
     categories: stringArray(raw.categories),
     hasTransfer: Boolean(raw.hasTransfer),
     hasMeal: Boolean(raw.hasMeal),
+    isAdvantage: Boolean(raw.isAdvantage),
     campaignPrice: typeof raw.campaignPrice === 'number' ? raw.campaignPrice : undefined,
     pricing: (raw.pricing as Tour['pricing']) || {currency: 'EUR', byRegion: {}},
     participantRules: raw.participantRules as Tour['participantRules'],

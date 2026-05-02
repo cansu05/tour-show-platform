@@ -1,5 +1,5 @@
 ﻿import {describe, expect, it} from 'vitest';
-import {MONTHLY_ADVANTAGE_FILTER, filterToursByCategory, hasCampaignPrice} from '@/utils/category-filter';
+import {MONTHLY_ADVANTAGE_FILTER, filterToursByCategory, isAdvantageTour} from '@/utils/category-filter';
 import type {Tour} from '@/types/tour';
 
 const tours: Tour[] = [
@@ -53,6 +53,7 @@ const tours: Tour[] = [
     importantNotes: [],
     hasTransfer: false,
     hasMeal: false,
+    isAdvantage: true,
     campaignPrice: 25,
     pricing: {currency: 'EUR', byRegion: {}},
     coverImage: 'x',
@@ -72,17 +73,17 @@ describe('filterToursByCategory', () => {
     expect(filterToursByCategory(tours, 'aile')).toHaveLength(1);
   });
 
-  it('filters by campaign price for monthly advantage tours', () => {
+  it('filters by advantage flag for monthly advantage tours', () => {
     expect(filterToursByCategory(tours, MONTHLY_ADVANTAGE_FILTER)).toEqual([tours[2]]);
   });
 });
 
-describe('hasCampaignPrice', () => {
-  it('returns true when tour has a numeric campaign price', () => {
-    expect(hasCampaignPrice(tours[2])).toBe(true);
+describe('isAdvantageTour', () => {
+  it('returns true when tour is marked as advantage', () => {
+    expect(isAdvantageTour(tours[2])).toBe(true);
   });
 
-  it('returns false when tour does not have a campaign price', () => {
-    expect(hasCampaignPrice(tours[0])).toBe(false);
+  it('returns false when tour is not marked as advantage', () => {
+    expect(isAdvantageTour(tours[0])).toBe(false);
   });
 });

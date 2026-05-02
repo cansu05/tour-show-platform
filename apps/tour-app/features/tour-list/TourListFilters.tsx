@@ -5,7 +5,6 @@ import {SearchBar} from '@/components/search/SearchBar';
 export function TourListFilters({
   search,
   categories,
-  showMonthlyAdvantage,
   activeCategory,
   onSearchChange,
   onCategoryChange,
@@ -13,7 +12,6 @@ export function TourListFilters({
 }: {
   search: string;
   categories: string[];
-  showMonthlyAdvantage: boolean;
   activeCategory: string | null;
   onSearchChange: (value: string) => void;
   onCategoryChange: (value: string | null) => void;
@@ -46,7 +44,6 @@ export function TourListFilters({
       >
         <CategoryFilters
           categories={categories}
-          showMonthlyAdvantage={showMonthlyAdvantage}
           value={activeCategory}
           onChange={onCategoryChange}
         />

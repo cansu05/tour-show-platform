@@ -539,6 +539,7 @@ export function TourDashboardForm({
   const selectActivePublishState = useCallback(() => setField('publishState', 'active'), [setField]);
   const toggleTransfer = useCallback(() => setField('hasTransfer', !form.hasTransfer), [form.hasTransfer, setField]);
   const toggleMeal = useCallback(() => setField('hasMeal', !form.hasMeal), [form.hasMeal, setField]);
+  const toggleAdvantage = useCallback(() => setField('isAdvantage', !form.isAdvantage), [form.isAdvantage, setField]);
   const saveDraft = useCallback(() => runSubmit('draft'), [runSubmit]);
   const saveSelectedState = useCallback(() => runSubmit(form.publishState), [form.publishState, runSubmit]);
 
@@ -609,8 +610,10 @@ export function TourDashboardForm({
           <ServicesSection
             hasTransfer={form.hasTransfer}
             hasMeal={form.hasMeal}
+            isAdvantage={form.isAdvantage}
             onToggleTransfer={toggleTransfer}
             onToggleMeal={toggleMeal}
+            onToggleAdvantage={toggleAdvantage}
           />
 
           <PricingSection

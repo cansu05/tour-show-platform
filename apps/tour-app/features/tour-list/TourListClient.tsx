@@ -12,10 +12,11 @@ import {useDebouncedValue} from '@/hooks/useDebouncedValue';
 import {useSpeechRecognition} from '@/hooks/useSpeechRecognition';
 import {TourListFilters} from '@/features/tour-list/TourListFilters';
 import {TourListHero} from '@/features/tour-list/TourListHero';
+import {MonthlyAdvantageHero} from '@/features/tour-list/MonthlyAdvantageHero';
 import {INITIAL_VISIBLE_TOURS, LOAD_MORE_STEP} from '@/features/tour-list/tour-list.constants';
 import type {TourListClientProps, TourListFeedbackState} from '@/features/tour-list/tour-list.types';
 import {getAvailableCategories, rankToursForDisplay} from '@/features/tour-list/tour-list.utils';
-import {hasCampaignPrice} from '@/utils/category-filter';
+import {isAdvantageTour, MONTHLY_ADVANTAGE_FILTER} from '@/utils/category-filter';
 
 export function TourListClient({tours}: TourListClientProps) {
   const locale = useLocale() as AppLocale;
@@ -33,7 +34,7 @@ export function TourListClient({tours}: TourListClientProps) {
 
   const debouncedSearch = useDebouncedValue(search, SEARCH_DEBOUNCE_MS);
   const availableCategories = useMemo(() => getAvailableCategories(tours, locale), [locale, tours]);
-  const hasMonthlyAdvantageTours = useMemo(() => tours.some(hasCampaignPrice), [tours]);
+  const monthlyAdvantageTours = useMemo(() => tours.filter(isAdvantageTour), [tours]);
   const ranked = useMemo(
     () => rankToursForDisplay({tours, category: activeCategory, search: debouncedSearch, locale}),
     [activeCategory, debouncedSearch, locale, tours]
@@ -74,10 +75,19 @@ export function TourListClient({tours}: TourListClientProps) {
     <Stack spacing={{xs: 3, md: 4}}>
       <TourListHero title={tHome('title')} subtitle={tHome('subtitle')} />
 
+      <MonthlyAdvantageHero
+        count={monthlyAdvantageTours.length}
+        eyebrow={tHome('monthlyAdvantageEyebrow')}
+        title={tHome('monthlyAdvantageTitle')}
+        titleAccent={tHome('monthlyAdvantageTitleAccent')}
+        subtitle={tHome('monthlyAdvantageHeroSubtitle')}
+        actionLabel={tHome('monthlyAdvantageAction')}
+        onClick={() => handleCategoryChange(MONTHLY_ADVANTAGE_FILTER)}
+      />
+
       <TourListFilters
         search={search}
         categories={availableCategories}
-        showMonthlyAdvantage={hasMonthlyAdvantageTours}
         activeCategory={activeCategory}
         onSearchChange={handleSearchChange}
         onCategoryChange={handleCategoryChange}

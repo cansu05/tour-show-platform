@@ -3,17 +3,15 @@
 import {Box, Chip, Stack, Typography} from '@mui/material';
 import {useLocale, useTranslations} from 'next-intl';
 import type {AppLocale} from '@/constants/locales';
-import {MONTHLY_ADVANTAGE_FILTER} from '@/utils/category-filter';
 import {formatCategoryLabel} from '@/utils/tour-labels';
 
 type Props = {
   categories: string[];
-  showMonthlyAdvantage: boolean;
   value: string | null;
   onChange: (category: string | null) => void;
 };
 
-export function CategoryFilters({categories, showMonthlyAdvantage, value, onChange}: Props) {
+export function CategoryFilters({categories, value, onChange}: Props) {
   const locale = useLocale() as AppLocale;
   const t = useTranslations('home');
 
@@ -45,19 +43,6 @@ export function CategoryFilters({categories, showMonthlyAdvantage, value, onChan
             }}
             onClick={() => onChange(null)}
           />
-          {showMonthlyAdvantage ? (
-            <Chip
-              label={t('monthlyAdvantageTours')}
-              clickable
-              color={value === MONTHLY_ADVANTAGE_FILTER ? 'primary' : 'default'}
-              variant="filled"
-              sx={{
-                px: 1.2,
-                bgcolor: value === MONTHLY_ADVANTAGE_FILTER ? 'primary.main' : 'rgba(255,255,255,0.9)'
-              }}
-              onClick={() => onChange(MONTHLY_ADVANTAGE_FILTER)}
-            />
-          ) : null}
           {categories.map((category) => (
             <Chip
               key={category}

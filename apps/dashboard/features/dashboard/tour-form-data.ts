@@ -27,6 +27,7 @@ export type DashboardTourInput = {
   campaignPrice: string;
   hasTransfer: boolean;
   hasMeal: boolean;
+  isAdvantage: boolean;
   publishState: TourLifecycleStatus;
   participantRules: {
     freeChildMinAge: string;
@@ -54,6 +55,7 @@ export const DASHBOARD_INITIAL_FORM: DashboardTourInput = {
   campaignPrice: '',
   hasTransfer: true,
   hasMeal: false,
+  isAdvantage: false,
   publishState: 'draft',
   participantRules: {
     freeChildMinAge: '0',
@@ -157,6 +159,7 @@ export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): 
     categories: input.categories,
     hasTransfer: input.hasTransfer,
     hasMeal: input.hasMeal,
+    isAdvantage: input.isAdvantage,
     campaignPrice: parseOptionalNumber(input.campaignPrice),
     pricing: {currency: input.currency.trim() || 'EUR', byRegion},
     participantRules: buildParticipantRules(input.participantRules),
@@ -204,6 +207,7 @@ export function buildDashboardFormFromTour(tour: Tour): DashboardTourInput {
     campaignPrice: typeof tour.campaignPrice === 'number' ? String(tour.campaignPrice) : '',
     hasTransfer: tour.hasTransfer,
     hasMeal: tour.hasMeal,
+    isAdvantage: Boolean(tour.isAdvantage),
     publishState,
     participantRules: {
       freeChildMinAge: tour.participantRules?.freeChildMinAge?.toString() || '',

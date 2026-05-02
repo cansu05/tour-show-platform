@@ -108,8 +108,10 @@ export type TranslationSectionProps = {
 export type ServicesSectionProps = {
   hasTransfer: boolean;
   hasMeal: boolean;
+  isAdvantage: boolean;
   onToggleTransfer: () => void;
   onToggleMeal: () => void;
+  onToggleAdvantage: () => void;
 };
 
 export type PricingSectionProps = {
