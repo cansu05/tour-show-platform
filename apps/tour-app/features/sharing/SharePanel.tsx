@@ -30,7 +30,7 @@ export function ShareActions({slug, title, locale, onFeedback}: Props) {
   }, []);
 
   const envBaseUrl = (process.env.NEXT_PUBLIC_APP_URL ?? '').trim();
-  const baseUrl = envBaseUrl || runtimeOrigin;
+  const baseUrl = runtimeOrigin || envBaseUrl;
   const shareUrl = baseUrl ? buildTourShareUrl(baseUrl, locale, slug) : `/${locale}/tours/${slug}`;
 
   const onCopy = async () => {
