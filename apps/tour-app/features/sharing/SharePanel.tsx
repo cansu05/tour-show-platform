@@ -17,6 +17,15 @@ type Props = {
   onFeedback: (msg: string, type: 'success' | 'error') => void;
 };
 
+function isLocalhostUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+  } catch {
+    return false;
+  }
+}
+
 export function ShareActions({slug, title, locale, onFeedback}: Props) {
   const tTour = useTranslations('tour');
   const tShare = useTranslations('share');
@@ -30,7 +39,7 @@ export function ShareActions({slug, title, locale, onFeedback}: Props) {
   }, []);
 
   const envBaseUrl = (process.env.NEXT_PUBLIC_APP_URL ?? '').trim();
-  const baseUrl = runtimeOrigin || envBaseUrl;
+  const baseUrl = runtimeOrigin || (isLocalhostUrl(envBaseUrl) ? '' : envBaseUrl);
   const shareUrl = baseUrl ? buildTourShareUrl(baseUrl, locale, slug) : `/${locale}/tours/${slug}`;
 
   const onCopy = async () => {
