@@ -2,7 +2,6 @@
 
 import LocalOfferRoundedIcon from "@mui/icons-material/LocalOfferRounded";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import heroImage from "@/assets/hero-2.png";
 
 type Props = {
   count: number;
@@ -35,7 +34,7 @@ export function MonthlyAdvantageHero({
         minHeight: { xs: 220, sm: 260, md: 250 },
         px: { xs: 3, md: 4.5 },
         py: { xs: 2.6, md: 3.2 },
-        backgroundImage: `linear-gradient(90deg, rgba(5,38,58,0.48) 0%, rgba(5,38,58,0.28) 42%, rgba(5,38,58,0.06) 100%), url(${heroImage.src})`,
+        backgroundImage: "linear-gradient(90deg, rgba(5,38,58,0.48) 0%, rgba(5,38,58,0.28) 42%, rgba(5,38,58,0.06) 100%), url('/assets/hero-2.png')",
         backgroundSize: "cover",
         backgroundPosition: { xs: "center", md: "center 42%" },
         boxShadow: "0 24px 54px rgba(5,63,92,0.22)",
