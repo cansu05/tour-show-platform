@@ -242,6 +242,22 @@ export function getActionHint(options: {
   return `${validationErrorCount} alan kontrol bekliyor.`;
 }
 
+function syncFormLocalizedTitles(localized: DashboardTourInput['localized'], title: string): DashboardTourInput['localized'] {
+  if (!localized) return {};
+
+  return Object.fromEntries(
+    Object.entries(localized).map(([locale, content]) => [
+      locale,
+      content
+        ? {
+            ...content,
+            title
+          }
+        : content
+    ])
+  ) as DashboardTourInput['localized'];
+}
+
 export function dashboardFormReducer(state: DashboardTourInput, action: DashboardFormAction): DashboardTourInput {
   switch (action.type) {
     case 'reset':
@@ -255,6 +271,7 @@ export function dashboardFormReducer(state: DashboardTourInput, action: Dashboar
       return {
         ...state,
         title: action.title,
+        localized: syncFormLocalizedTitles(state.localized, action.title),
         slug: action.slugEdited ? state.slug : normalizeDashboardSlug(action.title)
       };
     case 'toggleCategory':

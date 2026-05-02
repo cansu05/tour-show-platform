@@ -116,6 +116,22 @@ function buildRegionPricing(regions: DashboardTourInput['regions']) {
   }, {});
 }
 
+function syncLocalizedTitles(localized: Tour['localized'], title: string): Tour['localized'] {
+  if (!localized) return {};
+
+  return Object.fromEntries(
+    Object.entries(localized).map(([locale, content]) => [
+      locale,
+      content
+        ? {
+            ...content,
+            title
+          }
+        : content
+    ])
+  ) as Tour['localized'];
+}
+
 export function normalizeDashboardSlug(value: string) {
   return slugify(value);
 }
@@ -167,7 +183,7 @@ export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): 
     gallery,
     videoUrl: input.videoUrl.trim() || undefined,
     localized: {
-      ...(input.localized || {}),
+      ...syncLocalizedTitles(input.localized, title),
       tr: {
         title,
         shortDescription,

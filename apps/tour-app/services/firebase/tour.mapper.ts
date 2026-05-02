@@ -31,7 +31,7 @@ function parsePublishState(value: unknown): Tour['publishState'] {
 
 function pickBaseContent(localized: Tour['localized']): TourLocalizedContent | undefined {
   if (!localized) return undefined;
-  return localized.de || localized.en || localized.tr;
+  return localized.tr || localized.de || localized.en;
 }
 
 export function mapTourDocument(raw: TourDocument, idFallback: string): Tour | null {
@@ -39,7 +39,7 @@ export function mapTourDocument(raw: TourDocument, idFallback: string): Tour | n
 
   const fallbackContent = pickBaseContent(raw.localized);
   const gallery = stringArray(raw.gallery);
-  const title = fallbackContent?.title || raw.title || raw.slug;
+  const title = raw.localized?.tr?.title || raw.title || fallbackContent?.title || raw.slug;
   const shortDescription = fallbackContent?.shortDescription || raw.shortDescription || '';
   const priceSummary = getTourPriceSummary(raw.pricing, raw.campaignPrice);
 

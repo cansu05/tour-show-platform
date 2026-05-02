@@ -16,7 +16,7 @@ export function localizeTour(tour: Tour, locale: AppLocale): Tour {
 
   return {
     ...tour,
-    title: content?.title || tour.title,
+    title: tour.title,
     shortDescription: content?.shortDescription || tour.shortDescription,
     description: content?.description || tour.description,
     thingsToBring: content?.thingsToBring || tour.thingsToBring || [],
