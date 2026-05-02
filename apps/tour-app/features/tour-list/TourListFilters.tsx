@@ -5,6 +5,7 @@ import {SearchBar} from '@/components/search/SearchBar';
 export function TourListFilters({
   search,
   categories,
+  showMonthlyAdvantage,
   activeCategory,
   onSearchChange,
   onCategoryChange,
@@ -12,6 +13,7 @@ export function TourListFilters({
 }: {
   search: string;
   categories: string[];
+  showMonthlyAdvantage: boolean;
   activeCategory: string | null;
   onSearchChange: (value: string) => void;
   onCategoryChange: (value: string | null) => void;
@@ -42,7 +44,12 @@ export function TourListFilters({
           boxShadow: '0 8px 22px rgba(5,63,92,0.06)'
         }}
       >
-        <CategoryFilters categories={categories} value={activeCategory} onChange={onCategoryChange} />
+        <CategoryFilters
+          categories={categories}
+          showMonthlyAdvantage={showMonthlyAdvantage}
+          value={activeCategory}
+          onChange={onCategoryChange}
+        />
       </Paper>
     </Stack>
   );
