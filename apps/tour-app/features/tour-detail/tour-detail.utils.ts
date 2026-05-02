@@ -12,7 +12,10 @@ export function buildTourImageSet(tour: Tour) {
 
 export function getTourDetailFlags(tour: Tour) {
   const hasCampaignPrice = typeof tour.campaignPrice === 'number';
-  const hasImportantNotes = tour.importantNotes.length > 0;
+  const thingsToBring = tour.thingsToBring.map((item) => item.trim()).filter(Boolean);
+  const importantNotes = tour.importantNotes.map((item) => item.trim()).filter(Boolean);
+  const hasThingsToBring = thingsToBring.length > 0;
+  const hasImportantNotes = importantNotes.length > 0;
   const hasFreeChildRule =
     typeof tour.participantRules?.freeChildMinAge === 'number' &&
     typeof tour.participantRules?.freeChildMaxAge === 'number' &&
@@ -26,7 +29,10 @@ export function getTourDetailFlags(tour: Tour) {
 
   return {
     hasCampaignPrice,
+    hasThingsToBring,
     hasImportantNotes,
+    thingsToBring,
+    importantNotes,
     hasFreeChildRule,
     hasChildRule,
     pricingRows: Object.entries(tour.pricing.byRegion || {})

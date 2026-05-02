@@ -33,7 +33,7 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
   });
 
   const imageSet = buildTourImageSet(tour);
-  const {hasImportantNotes, hasFreeChildRule, hasChildRule, pricingRows} = getTourDetailFlags(tour);
+  const {hasThingsToBring, hasImportantNotes, thingsToBring, importantNotes, hasFreeChildRule, hasChildRule, pricingRows} = getTourDetailFlags(tour);
 
   return (
     <Stack spacing={{xs: 3, md: 4}}>
@@ -97,21 +97,25 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
         </>
       </TourDetailSectionCard>
 
-      <Grid2 container spacing={{xs: 2, md: 2.5}}>
-        <Grid2 size={{xs: 12, md: 6}}>
-          <TourDetailSectionCard title={tTour("thingsToBring")} fullHeight>
-            <TourDetailList items={tour.thingsToBring} />
-          </TourDetailSectionCard>
-        </Grid2>
+      {hasThingsToBring || hasImportantNotes ? (
+        <Grid2 container spacing={{xs: 2, md: 2.5}}>
+          {hasThingsToBring ? (
+            <Grid2 size={{xs: 12, md: 6}}>
+              <TourDetailSectionCard title={tTour("thingsToBring")} fullHeight>
+                <TourDetailList items={thingsToBring} />
+              </TourDetailSectionCard>
+            </Grid2>
+          ) : null}
 
-        {hasImportantNotes ? (
-          <Grid2 size={{xs: 12, md: 6}}>
-            <TourDetailSectionCard title={tTour("importantNotes")} fullHeight>
-              <TourDetailList items={tour.importantNotes} />
-            </TourDetailSectionCard>
-          </Grid2>
-        ) : null}
-      </Grid2>
+          {hasImportantNotes ? (
+            <Grid2 size={{xs: 12, md: 6}}>
+              <TourDetailSectionCard title={tTour("importantNotes")} fullHeight>
+                <TourDetailList items={importantNotes} />
+              </TourDetailSectionCard>
+            </Grid2>
+          ) : null}
+        </Grid2>
+      ) : null}
 
       <Grid2 container spacing={{xs: 2, md: 2.5}}>
         <Grid2 size={{xs: 12, md: 7}}>

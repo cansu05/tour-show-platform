@@ -19,6 +19,7 @@ export type DashboardTourInput = {
   keywords: string[];
   thingsToBring: string[];
   importantNotes: string[];
+  localized?: Tour['localized'];
   coverImage: string;
   gallery: string;
   videoUrl: string;
@@ -45,6 +46,7 @@ export const DASHBOARD_INITIAL_FORM: DashboardTourInput = {
   keywords: [],
   thingsToBring: [],
   importantNotes: [],
+  localized: {},
   coverImage: '',
   gallery: '',
   videoUrl: '',
@@ -162,6 +164,7 @@ export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): 
     gallery,
     videoUrl: input.videoUrl.trim() || undefined,
     localized: {
+      ...(input.localized || {}),
       tr: {
         title,
         shortDescription,
@@ -193,6 +196,7 @@ export function buildDashboardFormFromTour(tour: Tour): DashboardTourInput {
     keywords: tour.keywords || [],
     thingsToBring: tour.localized?.tr?.thingsToBring || tour.thingsToBring || [],
     importantNotes: tour.localized?.tr?.importantNotes || tour.importantNotes || [],
+    localized: tour.localized || {},
     coverImage: resolveFormCoverImage(tour.coverImage || '', gallery),
     gallery: gallery.join('\n'),
     videoUrl: tour.videoUrl || '',

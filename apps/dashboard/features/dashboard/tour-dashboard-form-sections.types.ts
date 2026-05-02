@@ -1,5 +1,7 @@
 import type {ChangeEvent, ReactNode} from 'react';
 import type {DashboardTourInput} from '@/features/dashboard/tour-form-data';
+import type {AppLocale} from '@shared/locales';
+import type {TourLocalizedContent} from '@/types/tour';
 
 export type SectionConfig = {
   id: string;
@@ -95,6 +97,12 @@ export type ContentSectionProps = {
   onNotesDraftChange: (value: string) => void;
   onAddImportantNote: () => void;
   onRemoveImportantNote: (index: number) => void;
+};
+
+export type TranslationSectionProps = {
+  localized: Partial<Record<AppLocale, TourLocalizedContent>>;
+  isTranslating: boolean;
+  onTranslate: () => void;
 };
 
 export type ServicesSectionProps = {

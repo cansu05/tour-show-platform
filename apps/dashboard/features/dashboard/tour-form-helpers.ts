@@ -107,6 +107,8 @@ export function getSectionStatus(
       return form.categories.length > 0 ? 'complete' : 'pending';
     case 'content':
       return form.description.trim() ? 'complete' : 'pending';
+    case 'translations':
+      return (['de', 'en', 'ru', 'fr', 'sk', 'cs'] as const).some((locale) => form.localized?.[locale]?.title?.trim()) ? 'complete' : 'pending';
     case 'services':
       return form.hasTransfer || form.hasMeal ? 'complete' : 'pending';
     case 'pricing':

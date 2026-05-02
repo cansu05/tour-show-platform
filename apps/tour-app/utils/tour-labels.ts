@@ -1,6 +1,13 @@
 import type {AppLocale} from '@/constants/locales';
 
 const CATEGORY_LABELS: Record<string, Record<AppLocale, string>> = {
+  aile: {de: 'Familie', en: 'Family', tr: 'Aile', ru: 'Semya', fr: 'Famille', sk: 'Rodina', cs: 'Rodina'},
+  doğa: {de: 'Natur', en: 'Nature', tr: 'Doğa', ru: 'Priroda', fr: 'Nature', sk: 'Priroda', cs: 'Priroda'},
+  deniz: {de: 'Meer', en: 'Sea', tr: 'Deniz', ru: 'More', fr: 'Mer', sk: 'More', cs: 'More'},
+  tarih: {de: 'Geschichte', en: 'History', tr: 'Tarih', ru: 'Istoriya', fr: 'Histoire', sk: 'Historia', cs: 'Historie'},
+  macera: {de: 'Abenteuer', en: 'Adventure', tr: 'Macera', ru: 'Priklyuchenie', fr: 'Aventure', sk: 'Dobrodruzstvo', cs: 'Dobrodruzstvi'},
+  günübirlik: {de: 'Tagestour', en: 'Daily Tour', tr: 'Günübirlik', ru: 'Odnodnevnyy tur', fr: 'Excursion a la journee', sk: 'Jednodnovy vylet', cs: 'Jednodenni vylet'},
+  konaklamalı: {de: 'Mit Ubernachtung', en: 'Overnight', tr: 'Konaklamalı', ru: 'S prozhivaniem', fr: 'Avec hebergement', sk: 'S ubytovanim', cs: 'S ubytovanim'},
   'city-tour': {de: 'Stadttour', en: 'City Tour', tr: 'Şehir Turu', ru: 'Gorodskoy tur', fr: 'Visite de la ville', sk: 'Mestsky vylet', cs: 'Prohlidka mesta'},
   aquarium: {de: 'Aquarium', en: 'Aquarium', tr: 'Akvaryum', ru: 'Akvarium', fr: 'Aquarium', sk: 'Akvarium', cs: 'Akvárium'},
   'daily-tour': {de: 'Tagestour', en: 'Daily Tour', tr: 'Günlük Tur', ru: 'Dnevnoy tur', fr: 'Excursion de jour', sk: 'Denný vylet', cs: 'Jednodenni vylet'},

@@ -18,7 +18,8 @@ import {
   PublishSection,
   RulesSection,
   ServicesSection,
-  StepNavigation
+  StepNavigation,
+  TranslationSection
 } from '@/features/dashboard/TourDashboardFormSections';
 import {
   buildFormPreviewData,
@@ -43,9 +44,15 @@ import {
 } from '@/features/dashboard/tour-form-data';
 import {validateUploadFiles, type SignedUploadPayload} from '@/features/dashboard/uploads';
 import {useObjectUrl, useObjectUrlMap} from '@/features/dashboard/use-object-url-cache';
+import type {AppLocale} from '@shared/locales';
+import type {TourLocalizedContent} from '@/types/tour';
 
 type JsonMessageResponse = {
   message?: string;
+};
+
+type TourTranslationResponse = {
+  localized?: Partial<Record<AppLocale, TourLocalizedContent>>;
 };
 
 async function readJsonMessageResponse<T>(response: Response): Promise<T | JsonMessageResponse> {
@@ -120,6 +127,7 @@ export function TourDashboardForm({
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [activeSection, setActiveSection] = useState(FORM_SECTIONS[0].id);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const [submitIntent, setSubmitIntent] = useState<TourLifecycleStatus | null>(null);
   const [slugEdited, setSlugEdited] = useState(Boolean(initialData.slug));
 
@@ -135,6 +143,7 @@ export function TourDashboardForm({
     setValidationErrors({});
     setActiveSection(FORM_SECTIONS[0].id);
     setIsSubmitting(false);
+    setIsTranslating(false);
     setSubmitIntent(null);
     setSlugEdited(Boolean(initialData.slug));
   }, [initialData]);
@@ -337,6 +346,53 @@ export function TourDashboardForm({
     setValidationErrors({});
     setSlugEdited(Boolean(initialData.slug));
   }, [initialData]);
+
+  const buildTurkishLocalizedContent = useCallback(
+    (): TourLocalizedContent => ({
+      title: form.title.trim(),
+      shortDescription: form.shortDescription.trim(),
+      description: form.description.trim(),
+      thingsToBring: form.thingsToBring.map((entry) => entry.trim()).filter(Boolean),
+      importantNotes: form.importantNotes.map((entry) => entry.trim()).filter(Boolean)
+    }),
+    [form.description, form.importantNotes, form.shortDescription, form.thingsToBring, form.title]
+  );
+
+  const generateTranslations = useCallback(() => {
+    const source = buildTurkishLocalizedContent();
+
+    if (!source.title) {
+      setSubmitState({type: 'error', message: 'Çeviri için önce tur adını girin.'});
+      return;
+    }
+
+    void (async () => {
+      setIsTranslating(true);
+      setSubmitState(null);
+
+      try {
+        const response = await fetch('/api/dashboard/translations/tour', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({source})
+        });
+        const data = await readJsonMessageResponse<TourTranslationResponse>(response);
+
+        if (!response.ok || !('localized' in data) || !data.localized) {
+          const message = 'message' in data ? data.message : undefined;
+          setSubmitState({type: 'error', message: message || 'Çeviriler üretilemedi.'});
+          return;
+        }
+
+        setField('localized', {tr: source, ...data.localized});
+        setSubmitState({type: 'success', message: 'Çeviriler üretildi. Kaydettiğinizde tur kaydına eklenecek.'});
+      } catch (error) {
+        setSubmitState({type: 'error', message: error instanceof Error ? error.message : 'Çeviri işlemi tamamlanamadı.'});
+      } finally {
+        setIsTranslating(false);
+      }
+    })();
+  }, [buildTurkishLocalizedContent, setField]);
 
   const uploadBatch = useCallback(async (slug: string, kind: 'cover' | 'gallery' | 'video', files: File[]) => {
     validateUploadFiles(kind, files);
@@ -547,6 +603,8 @@ export function TourDashboardForm({
             onAddImportantNote={addImportantNote}
             onRemoveImportantNote={removeImportantNote}
           />
+
+          <TranslationSection localized={form.localized || {}} isTranslating={isTranslating} onTranslate={generateTranslations} />
 
           <ServicesSection
             hasTransfer={form.hasTransfer}

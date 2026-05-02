@@ -57,6 +57,8 @@ Ornek:
 FIREBASE_PROJECT_ID=your_project_id
 FIREBASE_CLIENT_EMAIL=your_client_email
 FIREBASE_PRIVATE_KEY=your_private_key
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_TRANSLATION_MODEL=gpt-4o-mini
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 

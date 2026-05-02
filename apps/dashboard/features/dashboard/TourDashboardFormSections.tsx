@@ -3,14 +3,16 @@ import {memo, useRef} from 'react';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded';
+import {LOCALE_LABELS} from '@shared/locales';
 import {TOUR_CATEGORIES, TOUR_DAYS, TOUR_REGIONS} from '@shared/index';
 import {toDashboardMediaUrl} from '@/features/dashboard/TourPreviewDialog';
-import {cn, InputShell, SectionCard, textInputClassName} from '@/features/dashboard/components/admin-ui';
+import {buttonClassName, cn, InputShell, SectionCard, textInputClassName} from '@/features/dashboard/components/admin-ui';
 import type {
   BasicInformationSectionProps,
   ClassificationSectionProps,
@@ -26,13 +28,15 @@ import type {
   SectionStatusMap,
   ServicesSectionProps,
   StepNavigationProps,
-  ToggleCardProps
+  ToggleCardProps,
+  TranslationSectionProps
 } from '@/features/dashboard/tour-dashboard-form-sections.types';
 
 export const FORM_SECTIONS: SectionConfig[] = [
   {id: 'basic', title: 'Temel Bilgiler', description: 'Başlık, slug ve giriş metinleri.'},
   {id: 'classification', title: 'Kategoriler ve Konumlama', description: 'Turun yerleştiği kategori grupları.'},
   {id: 'content', title: 'İçerik Bilgileri', description: 'Açıklama, anahtar kelimeler ve hazırlık listeleri.'},
+  {id: 'translations', title: 'Çeviriler', description: 'TR içerikten diğer dilleri üret.'},
   {id: 'services', title: 'Hizmet Özellikleri', description: 'Transfer, yemek ve medya özellikleri.'},
   {id: 'pricing', title: 'Fiyatlandırma', description: 'Bölge bazlı fiyat ve gün kurgusu.'},
   {id: 'rules', title: 'Katılımcı Kuralları', description: 'Yaş ve çocuk aralıkları.'},
@@ -363,6 +367,44 @@ export const ContentSection = memo(function ContentSection({
           <ListEditor title="Anahtar kelimeler" hint="Arama ve keşif akışı için kısa etiketler ekleyin." placeholder="Örn. tekne turu" items={keywords} draft={keywordsDraft} onDraftChange={onKeywordsDraftChange} onAdd={onAddKeyword} onRemove={onRemoveKeyword} />
           <ListEditor title="Yanınıza alacaklarınız" hint="Katılımcının tur öncesinde bilmesi gereken hazırlık öğeleri." placeholder="Örn. havlu" items={thingsToBring} draft={thingsDraft} onDraftChange={onThingsDraftChange} onAdd={onAddThingToBring} onRemove={onRemoveThingToBring} />
           <ListEditor title="Önemli notlar" hint="Rezervasyon veya katılım sırasında kritik olan kısa notlar." placeholder="Örn. pasaport zorunludur" items={importantNotes} draft={notesDraft} onDraftChange={onNotesDraftChange} onAdd={onAddImportantNote} onRemove={onRemoveImportantNote} />
+        </div>
+      </SectionCard>
+    </section>
+  );
+});
+
+export const TranslationSection = memo(function TranslationSection({
+  localized,
+  isTranslating,
+  onTranslate
+}: TranslationSectionProps) {
+  return (
+    <section id="translations" className="scroll-mt-24">
+      <SectionCard
+        title="Çeviriler"
+        description="Türkçe içerikten public sitede kullanılan dil alanlarını üretin."
+        action={
+          <button type="button" onClick={onTranslate} disabled={isTranslating} className={buttonClassName({variant: 'primary', size: 'sm'})}>
+            <AutoAwesomeRoundedIcon sx={{fontSize: 18}} />
+            {isTranslating ? 'Üretiliyor...' : 'Çevirileri üret'}
+          </button>
+        }
+      >
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {(['de', 'en', 'ru', 'fr', 'sk', 'cs'] as const).map((locale) => {
+            const content = localized[locale];
+            return (
+              <div key={locale} className="rounded-[20px] border border-line bg-panel-subtle p-4">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <h4 className="text-sm font-semibold text-ink">{LOCALE_LABELS[locale]}</h4>
+                  <span className={cn('rounded-full px-2.5 py-1 text-xs font-semibold', content ? 'bg-success-soft text-success-strong' : 'bg-panel-strong text-ink-muted')}>
+                    {content ? 'Hazır' : 'Bekliyor'}
+                  </span>
+                </div>
+                <p className="line-clamp-2 min-h-10 text-sm leading-5 text-ink-soft">{content?.title || 'Henüz çeviri üretilmedi.'}</p>
+              </div>
+            );
+          })}
         </div>
       </SectionCard>
     </section>
