@@ -26,6 +26,12 @@ function normalizeMediaSrc(value?: string) {
   return trimmedValue.length > 0 ? trimmedValue : undefined;
 }
 
+const protectedMediaSx = {
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
+  WebkitTouchCallout: 'none'
+} as const;
+
 export function TourGallery({images, alt, videoUrl}: Props) {
   const tTour = useTranslations('tour');
   const source = useMemo<GalleryItem[]>(() => {
@@ -60,18 +66,25 @@ export function TourGallery({images, alt, videoUrl}: Props) {
               component="video"
               src={currentItem.src}
               controls
+              controlsList="nodownload noplaybackrate noremoteplayback"
+              disablePictureInPicture
+              draggable={false}
+              onContextMenu={(event) => event.preventDefault()}
+              playsInline
               preload="metadata"
-              sx={{display: 'block', width: '100%', height: '100%', objectFit: 'cover'}}
+              sx={{display: 'block', width: '100%', height: '100%', objectFit: 'cover', ...protectedMediaSx}}
             />
           ) : (
             <Image
               src={currentItem?.src || 'https://picsum.photos/1200/800?random=99'}
               alt={alt}
               fill
+              draggable={false}
+              onContextMenu={(event) => event.preventDefault()}
               priority={index === 0}
               unoptimized={Boolean(useUnoptimizedImage)}
               sizes="(max-width: 900px) 100vw, 70vw"
-              style={{objectFit: 'cover'}}
+              style={{objectFit: 'cover', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none'}}
             />
           )}
         </Box>
@@ -97,9 +110,11 @@ export function TourGallery({images, alt, videoUrl}: Props) {
               src={currentItem?.type === 'image' ? currentItem.src : 'https://picsum.photos/1200/800?random=99'}
               alt={alt}
               fill
+              draggable={false}
+              onContextMenu={(event) => event.preventDefault()}
               unoptimized={Boolean(useUnoptimizedImage)}
               sizes="100vw"
-              style={{objectFit: 'contain'}}
+              style={{objectFit: 'contain', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none'}}
             />
           </Box>
           <IconButton

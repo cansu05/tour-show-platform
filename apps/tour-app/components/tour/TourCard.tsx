@@ -62,9 +62,11 @@ export function TourCard({tour, locale}: Props) {
               src={tour.coverImage}
               alt={tour.title}
               fill
+              draggable={false}
+              onContextMenu={(event) => event.preventDefault()}
               unoptimized={useUnoptimizedImage}
               sizes="(max-width: 900px) 100vw, (max-width: 1536px) 50vw, 33vw"
-              style={{objectFit: 'cover'}}
+              style={{objectFit: 'cover', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none'}}
             />
             <Box
               sx={{
