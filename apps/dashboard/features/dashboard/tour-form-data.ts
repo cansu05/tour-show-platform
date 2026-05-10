@@ -1,5 +1,6 @@
 ﻿import {TOUR_REGIONS} from '@shared/index';
 import type {Tour, TourDocument, TourParticipantRules, TourRegionPricing} from '@/types/tour';
+import {sortTourDays} from '@shared/index';
 import type {TourLifecycleStatus} from '@/features/dashboard/admin-data';
 import {slugify} from '@/utils/slug';
 
@@ -105,7 +106,7 @@ function buildRegionPricing(regions: DashboardTourInput['regions']) {
 
     const adultPrice = parseOptionalNumber(region.adultPrice);
     const childPrice = parseOptionalNumber(region.childPrice);
-    const availableDays = region.availableDays.filter(Boolean);
+    const availableDays = sortTourDays(region.availableDays.filter(Boolean));
 
     if (adultPrice === undefined && childPrice === undefined && availableDays.length === 0) {
       return acc;
@@ -236,7 +237,7 @@ export function buildDashboardFormFromTour(tour: Tour): DashboardTourInput {
         enabled: Boolean(byRegion[region.key]),
         adultPrice: byRegion[region.key]?.adultPrice?.toString() || '',
         childPrice: byRegion[region.key]?.childPrice?.toString() || '',
-        availableDays: byRegion[region.key]?.availableDays || []
+        availableDays: sortTourDays(byRegion[region.key]?.availableDays || [])
       };
       return acc;
     }, {})

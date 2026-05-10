@@ -14,3 +14,14 @@ export const TOUR_DAYS = [
   {key: "saturday", label: "Cumartesi"},
   {key: "sunday", label: "Pazar"}
 ] as const;
+
+const TOUR_DAY_ORDER_INDEX = new Map(TOUR_DAYS.map((day, index) => [day.key, index]));
+
+export function sortTourDays(days: string[]) {
+  return [...days].sort((left, right) => {
+    const leftIndex = TOUR_DAY_ORDER_INDEX.get(left as (typeof TOUR_DAYS)[number]['key']) ?? Number.MAX_SAFE_INTEGER;
+    const rightIndex = TOUR_DAY_ORDER_INDEX.get(right as (typeof TOUR_DAYS)[number]['key']) ?? Number.MAX_SAFE_INTEGER;
+
+    return leftIndex - rightIndex;
+  });
+}

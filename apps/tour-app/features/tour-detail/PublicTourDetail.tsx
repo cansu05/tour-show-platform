@@ -21,6 +21,7 @@ import {
   formatCategoryLabel,
   formatDayLabel,
   formatRegionLabel,
+  sortTourDays,
 } from "@/utils/tour-labels";
 
 export function PublicTourDetail({tour}: PublicTourDetailProps) {
@@ -132,7 +133,7 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
                   <Stack spacing={0.5}>
                     <Typography variant="h4">{formatRegionLabel(region, locale)}</Typography>
                     <Stack direction="row" spacing={0.8} flexWrap="wrap" useFlexGap>
-                      {(pricing.availableDays || []).map((day) => (
+                      {sortTourDays(pricing.availableDays || []).map((day) => (
                         <Chip
                           key={day}
                           size="small"

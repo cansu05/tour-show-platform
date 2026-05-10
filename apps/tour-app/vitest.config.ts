@@ -6,7 +6,8 @@ const rootDir = fileURLToPath(new URL('.', import.meta.url));
 export default defineConfig({
   resolve: {
     alias: {
-      '@': rootDir
+      '@': rootDir,
+      '@shared': fileURLToPath(new URL('../../packages/shared/src', import.meta.url))
     }
   },
   test: {

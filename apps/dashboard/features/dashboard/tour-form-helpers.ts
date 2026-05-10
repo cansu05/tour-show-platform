@@ -1,4 +1,5 @@
 import {getTourHealth, type TourLifecycleStatus} from '@/features/dashboard/admin-data';
+import {sortTourDays} from '@shared/index';
 import type {DashboardFormAction} from '@/features/dashboard/tour-form.types';
 import type {TourPreviewData} from '@/features/dashboard/TourPreviewDialog';
 import {
@@ -151,7 +152,7 @@ export function buildFormPreviewData({
 
       const adultPrice = region.adultPrice.trim() ? Number(region.adultPrice) : undefined;
       const childPrice = region.childPrice.trim() ? Number(region.childPrice) : undefined;
-      const availableDays = region.availableDays.filter(Boolean);
+      const availableDays = sortTourDays(region.availableDays.filter(Boolean));
 
       if (adultPrice === undefined && childPrice === undefined && availableDays.length === 0) {
         return acc;
@@ -302,9 +303,11 @@ export function dashboardFormReducer(state: DashboardTourInput, action: Dashboar
       };
     case 'toggleRegionDay': {
       const region = state.regions[action.regionKey];
-      const nextDays = region.availableDays.includes(action.dayKey)
-        ? region.availableDays.filter((entry) => entry !== action.dayKey)
-        : [...region.availableDays, action.dayKey];
+      const nextDays = sortTourDays(
+        region.availableDays.includes(action.dayKey)
+          ? region.availableDays.filter((entry) => entry !== action.dayKey)
+          : [...region.availableDays, action.dayKey]
+      );
 
       return {
         ...state,

@@ -1,4 +1,5 @@
 import type {AppLocale} from '@/constants/locales';
+export {sortTourDays} from '@shared/index';
 
 const CATEGORY_LABELS: Record<string, Record<AppLocale, string>> = {
   aile: {de: 'Familie', en: 'Family', tr: 'Aile', ru: 'Semya', fr: 'Famille', sk: 'Rodina', cs: 'Rodina'},
