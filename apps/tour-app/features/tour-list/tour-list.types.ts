@@ -5,9 +5,11 @@ export type TourListClientProps = {
 };
 
 export type TourListHeroProps = {
-  title: string;
-  subtitle: string;
+  activeQuickFilter: TourQuickFilter | null;
+  onQuickFilterChange: (filter: TourQuickFilter) => void;
 };
+
+export type TourQuickFilter = 'today' | 'transfer' | 'family' | 'adventure' | 'economy';
 
 export type TourListFeedbackState = {
   open: boolean;

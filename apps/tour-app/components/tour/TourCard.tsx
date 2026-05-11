@@ -1,30 +1,47 @@
-'use client';
+"use client";
 
-import ArrowOutwardRoundedIcon from '@mui/icons-material/ArrowOutwardRounded';
-import {Box, Card, CardActionArea, CardContent, Chip, CircularProgress, Stack, Typography} from '@mui/material';
-import Image from 'next/image';
-import {useTranslations} from 'next-intl';
-import type {MouseEvent} from 'react';
-import {useState} from 'react';
-import type {Tour} from '@/types/tour';
-import {Link} from '@/i18n/navigation';
-import type {AppLocale} from '@/constants/locales';
-import {getTourPriceSummary} from '@/utils/tour-pricing';
-import {isUploadedTourAsset} from '@/utils/media';
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import type { MouseEvent } from "react";
+import { useState } from "react";
+import type { AppLocale } from "@/constants/locales";
+import { Link } from "@/i18n/navigation";
+import { radiusTokens } from "@/theme/tokens";
+import type { Tour } from "@/types/tour";
+import { isUploadedTourAsset } from "@/utils/media";
+import { getTourPriceSummary } from "@/utils/tour-pricing";
 
 type Props = {
   tour: Tour;
   locale: AppLocale;
 };
 
-export function TourCard({tour, locale}: Props) {
-  const tTour = useTranslations('tour');
+export function TourCard({ tour, locale }: Props) {
+  const tTour = useTranslations("tour");
   const [isNavigating, setIsNavigating] = useState(false);
   const priceSummary = getTourPriceSummary(tour.pricing, tour.campaignPrice);
   const useUnoptimizedImage = isUploadedTourAsset(tour.coverImage);
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    if (
+      event.defaultPrevented ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.button !== 0
+    ) {
       return;
     }
 
@@ -33,18 +50,13 @@ export function TourCard({tour, locale}: Props) {
 
   return (
     <Card
-      elevation={0}
       sx={{
-        height: '100%',
-        overflow: 'hidden',
-        position: 'relative',
-        background: '#FFFFFF',
-        transition: 'transform 0.24s ease, box-shadow 0.24s ease',
-        boxShadow: '0 10px 24px rgba(5,63,92,0.12)',
-        '&:hover': {
-          transform: 'translateY(-6px)',
-          boxShadow: '0 18px 36px rgba(5,63,92,0.2)'
-        }
+        height: "100%",
+        overflow: "hidden",
+        position: "relative",
+        borderRadius: `${radiusTokens.md}px`,
+        boxShadow: "0 14px 36px rgba(8, 48, 78, 0.08)",
+        bgcolor: "#ffffff",
       }}
     >
       <CardActionArea
@@ -54,45 +66,58 @@ export function TourCard({tour, locale}: Props) {
         prefetch
         onClick={handleClick}
         aria-busy={isNavigating}
-        sx={{height: '100%', alignItems: 'stretch'}}
+        sx={{
+          height: "100%",
+          alignItems: "stretch",
+          color: "inherit",
+          "&:hover .tour-card-cta": {
+            bgcolor: "#FF7800",
+            color: "#FFFFFF",
+            borderColor: "#FF7800",
+          },
+        }}
       >
-        <Stack sx={{height: '100%'}}>
-          <Box sx={{position: 'relative', minHeight: 248}}>
+        <Stack sx={{ height: "100%" }}>
+          <Box
+            sx={{ position: "relative", minHeight: 248, overflow: "hidden" }}
+          >
             <Image
               src={tour.coverImage}
               alt={tour.title}
               fill
               draggable={false}
               onContextMenu={(event) => event.preventDefault()}
+              sizes="(min-width: 1200px) 33vw, (min-width: 768px) 50vw, 100vw"
+              priority={false}
               unoptimized={useUnoptimizedImage}
-              sizes="(max-width: 900px) 100vw, (max-width: 1536px) 50vw, 33vw"
-              style={{objectFit: 'cover', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none'}}
+              style={{
+                objectFit: "cover",
+                userSelect: "none",
+                WebkitUserSelect: "none",
+                WebkitTouchCallout: "none",
+              }}
             />
             <Box
               sx={{
-                position: 'absolute',
+                position: "absolute",
                 inset: 0,
-                background: 'linear-gradient(180deg, rgba(5,38,58,0.02) 35%, rgba(5,38,58,0.62) 100%)'
+                background:
+                  "linear-gradient(180deg, rgba(0,40,70,0.02) 40%, rgba(0,40,70,0.18) 100%)",
               }}
             />
-            {typeof tour.campaignPrice === 'number' ? (
+            {typeof tour.campaignPrice === "number" ? (
               <Chip
-                label={`${tour.campaignPrice} ${tour.pricing.currency || 'EUR'}`}
+                label={`${tour.campaignPrice} ${priceSummary.currency}`}
                 sx={{
-                  position: 'absolute',
-                  top: 14,
-                  right: 14,
-                  px: 1.1,
-                  color: 'common.white',
-                  bgcolor: '#FF7A00',
+                  position: "absolute",
+                  top: 18,
+                  right: 18,
+                  bgcolor: "#FF7800",
+                  color: "#FFFFFF",
                   fontWeight: 800,
-                  boxShadow: '0 10px 24px rgba(255,122,0,0.38)',
-                  animation: 'campaign-pulse 1.15s ease-in-out infinite',
-                  '@keyframes campaign-pulse': {
-                    '0%': {transform: 'scale(1)', boxShadow: '0 10px 24px rgba(255,122,0,0.32)'},
-                    '50%': {transform: 'scale(1.06)', boxShadow: '0 14px 30px rgba(255,122,0,0.54)'},
-                    '100%': {transform: 'scale(1)', boxShadow: '0 10px 24px rgba(255,122,0,0.32)'}
-                  }
+                  borderRadius: `${radiusTokens.sm}px`,
+                  px: 1.2,
+                  boxShadow: "0 10px 22px rgba(255, 120, 0, 0.26)",
                 }}
               />
             ) : null}
@@ -101,82 +126,121 @@ export function TourCard({tour, locale}: Props) {
           <CardContent
             sx={{
               p: 2.35,
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
               flex: 1,
-              justifyContent: 'space-between',
-              bgcolor: 'rgba(236,246,251,0.45)'
+              bgcolor: "#FFFFFF",
             }}
           >
-            <Stack spacing={1.1} sx={{flex: 1, minHeight: 0}}>
-              <Box sx={{minHeight: 112}}>
-                <Typography variant="h3" sx={{lineHeight: 1.22, minHeight: 68}}>
+            <Stack spacing={1.2} sx={{ height: "100%", minHeight: 0 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  minHeight: { xs: 180, md: 202 },
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  sx={{
+                    color: "#092D42",
+                    lineHeight: 1.2,
+                    minHeight: { xs: 64, md: 72 },
+                  }}
+                >
                   {tour.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{lineHeight: 1.62, minHeight: 72}}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{
+                    mt: 0.6,
+                    lineHeight: 1.62,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 4,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
                   {tour.shortDescription}
                 </Typography>
               </Box>
-              <Stack direction="row" justifyContent="space-between" alignItems="center" pt={0.8}>
-                <Stack direction="row" spacing={2.5} alignItems="stretch">
-                  <Stack spacing={0.1}>
-                    <Typography variant="caption" color="text.secondary" sx={{fontSize: 12.5}}>
-                      {tTour('adultPrice')}
+
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="flex-end"
+                gap={1.5}
+                sx={{ mt: "auto" }}
+              >
+                <Stack direction="row" spacing={2.5} alignItems="flex-end">
+                  <Stack spacing={0.2}>
+                    <Typography variant="caption" color="text.secondary">
+                      {tTour("adultPrice")}
                     </Typography>
-                    <Typography variant="h4" sx={{color: 'primary.main'}}>
-                      {typeof priceSummary.minAdultPrice === 'number'
+                    <Typography variant="h5" sx={{ color: "#064568" }}>
+                      {typeof priceSummary.minAdultPrice === "number"
                         ? `${priceSummary.minAdultPrice} ${priceSummary.currency}`
-                        : tTour('priceOnRequest')}
+                        : tTour("priceOnRequest")}
                     </Typography>
                   </Stack>
-                  {typeof priceSummary.minChildPrice === 'number' ? (
-                    <Stack spacing={0.1}>
-                      <Typography variant="caption" color="text.secondary" sx={{fontSize: 12.5}}>
-                        {tTour('childPrice')}
+                  {typeof priceSummary.minChildPrice === "number" ? (
+                    <Stack spacing={0.2}>
+                      <Typography variant="caption" color="text.secondary">
+                        {tTour("childPrice")}
                       </Typography>
-                      <Typography variant="h4" sx={{color: 'primary.main'}}>
+                      <Typography variant="h5" sx={{ color: "#064568" }}>
                         {priceSummary.minChildPrice} {priceSummary.currency}
                       </Typography>
                     </Stack>
                   ) : null}
                 </Stack>
+
                 <Stack
+                  className="tour-card-cta"
                   direction="row"
-                  spacing={0.35}
                   alignItems="center"
+                  justifyContent="center"
+                  spacing={0.45}
                   sx={{
-                    px: 1.35,
-                    minHeight: 40,
-                    borderRadius: 999,
-                    bgcolor: 'background.paper',
-                    color: 'primary.main',
-                    fontWeight: 700
+                    minWidth: 150,
+                    minHeight: 36,
+                    px: 1.45,
+                    borderRadius: `${radiusTokens.md}px`,
+                    border: "1px solid rgba(255, 120, 0, 0.24)",
+                    bgcolor: "#FFFFFF",
+                    color: "#FF7800",
+                    flexShrink: 0,
+                    transition: "all 160ms ease",
                   }}
                 >
-                  <Typography variant="body2" sx={{fontWeight: 700}}>
-                    {tTour('publicPage')}
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 800, lineHeight: 1 }}
+                  >
+                    {tTour("detailsCta")}
                   </Typography>
-                  <ArrowOutwardRoundedIcon sx={{fontSize: 18}} />
+                  <ArrowForwardRoundedIcon sx={{ fontSize: 18 }} />
                 </Stack>
               </Stack>
             </Stack>
           </CardContent>
         </Stack>
       </CardActionArea>
+
       {isNavigating ? (
         <Box
           sx={{
-            position: 'absolute',
+            position: "absolute",
             inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'rgba(5,38,58,0.26)',
-            backdropFilter: 'blur(2px)',
-            pointerEvents: 'none'
+            zIndex: 2,
+            display: "grid",
+            placeItems: "center",
+            bgcolor: "rgba(255,255,255,0.74)",
+            backdropFilter: "blur(3px)",
           }}
         >
-          <CircularProgress size={42} thickness={4.5} sx={{color: 'common.white'}} />
+          <CircularProgress size={34} thickness={4} />
         </Box>
       ) : null}
     </Card>

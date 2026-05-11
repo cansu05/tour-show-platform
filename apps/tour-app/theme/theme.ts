@@ -1,6 +1,7 @@
 import {createTheme} from '@mui/material/styles';
 import {componentOverrides} from '@/theme/components';
 import {paletteTokens} from '@/theme/palette';
+import {radiusTokens} from '@/theme/tokens';
 import {typographyTokens} from '@/theme/typography';
 
 export const appTheme = createTheme({
@@ -8,7 +9,7 @@ export const appTheme = createTheme({
   typography: typographyTokens,
   spacing: 8,
   shape: {
-    borderRadius: 16
+    borderRadius: radiusTokens.sm
   },
   shadows: [
     'none',

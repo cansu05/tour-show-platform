@@ -2,14 +2,22 @@
 
 import {useState} from "react";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
-import LocalOfferRoundedIcon from "@mui/icons-material/LocalOfferRounded";
-import {Chip, Grid2, Stack, Typography} from "@mui/material";
+import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import {Box, Chip, Grid2, Stack, Typography} from "@mui/material";
 import {useLocale, useTranslations} from "next-intl";
 import {FeedbackSnackbar} from "@/components/common/FeedbackSnackbar";
 import {TourGallery} from "@/components/tour/TourGallery";
 import type {AppLocale} from "@/constants/locales";
 import {Link} from "@/i18n/navigation";
+import {
+  categoryIcons,
+} from "@/components/search/category-icons";
+import {
+  getCategoryIconColor,
+  getCategoryIconKey,
+} from "@/components/search/category-filter-icons";
 import {TourDetailList} from "@/features/tour-detail/TourDetailList";
 import {
   TourDetailSectionCard,
@@ -23,6 +31,16 @@ import {
   formatRegionLabel,
   sortTourDays,
 } from "@/utils/tour-labels";
+import {radiusTokens} from "@/theme/tokens";
+
+const IconByCategory = {
+  aile: categoryIcons.family,
+  doga: categoryIcons.nature,
+  gunubirlik: categoryIcons.daily,
+  konaklamali: categoryIcons.hotel,
+  macera: categoryIcons.adventure,
+  tarih: categoryIcons.history,
+};
 
 export function PublicTourDetail({tour}: PublicTourDetailProps) {
   const locale = useLocale() as AppLocale;
@@ -45,7 +63,13 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
         direction="row"
         spacing={0.6}
         alignItems="center"
-        sx={{width: "fit-content", color: "text.secondary", fontWeight: 700, px: 0.2}}
+        sx={{
+          width: "fit-content",
+          minHeight: {xs: 42, md: 42},
+          color: "text.secondary",
+          fontWeight: 700,
+          px: 0.2
+        }}
       >
         <ArrowBackRoundedIcon fontSize="small" />
         <Typography variant="body2" sx={{fontWeight: 700}}>
@@ -86,14 +110,39 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
             </Typography>
           ) : null}
           <Stack direction="row" flexWrap="wrap" gap={1}>
-            {tour.categories.map((category) => (
-              <Chip
-                key={category}
-                variant="filled"
-                label={formatCategoryLabel(category, locale)}
-                sx={{bgcolor: "rgba(5,63,92,0.12)", color: "text.primary", fontWeight: 700}}
-              />
-            ))}
+            {tour.categories.map((category) => {
+              const iconKey = getCategoryIconKey(category);
+              const Icon = IconByCategory[iconKey as keyof typeof IconByCategory];
+              const iconColor = getCategoryIconColor(category);
+
+              return (
+                <Chip
+                  key={category}
+                  icon={Icon ? <Icon /> : undefined}
+                  variant="filled"
+                  label={formatCategoryLabel(category, locale)}
+                  sx={{
+                    height: 28,
+                    borderRadius: `${radiusTokens.sm}px`,
+                    bgcolor: iconKey === "gunubirlik" ? "rgba(255,239,221,0.96)" : "rgba(232,244,252,0.96)",
+                    color: "#11354A",
+                    fontSize: 12,
+                    fontWeight: 900,
+                    px: 0.45,
+                    "& .MuiChip-icon": {
+                      width: 15,
+                      height: 15,
+                      color: iconColor,
+                      ml: 0.8,
+                      mr: 0.35
+                    },
+                    "& .MuiChip-label": {
+                      px: 0.65
+                    }
+                  }}
+                />
+              );
+            })}
           </Stack>
         </>
       </TourDetailSectionCard>
@@ -128,33 +177,60 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
                   direction={{xs: "column", sm: "row"}}
                   spacing={1}
                   justifyContent="space-between"
-                  sx={{p: 1.5, borderRadius: 2, bgcolor: "rgba(236,246,251,0.7)"}}
+                  sx={{
+                    p: {xs: 1.15, md: 0.95},
+                    borderRadius: `${radiusTokens.sm}px`,
+                    bgcolor: "rgba(232,244,252,0.92)",
+                    border: "1px solid rgba(206,226,240,0.72)",
+                    boxShadow: "none"
+                  }}
                 >
-                  <Stack spacing={0.5}>
-                    <Typography variant="h4">{formatRegionLabel(region, locale)}</Typography>
+                  <Stack direction={{xs: "column", md: "row"}} spacing={{xs: 0.8, md: 1.2}} alignItems={{xs: "flex-start", md: "center"}} sx={{minWidth: 0, flex: 1}}>
+                    <Stack direction="row" spacing={0.45} alignItems="center" sx={{minWidth: {md: 150}}}>
+                      <LocationOnRoundedIcon sx={{fontSize: 16, color: "#00437D"}} />
+                      <Typography sx={{fontSize: 13, fontWeight: 900, color: "#0A2D5D"}}>
+                        {formatRegionLabel(region, locale)}
+                      </Typography>
+                    </Stack>
                     <Stack direction="row" spacing={0.8} flexWrap="wrap" useFlexGap>
                       {sortTourDays(pricing.availableDays || []).map((day) => (
                         <Chip
                           key={day}
                           size="small"
-                          icon={<EventAvailableRoundedIcon />}
+                          icon={<CalendarMonthRoundedIcon />}
                           label={formatDayLabel(day, locale)}
+                          sx={{
+                            height: 24,
+                            borderRadius: `${radiusTokens.sm}px`,
+                            bgcolor: "rgba(191,218,235,0.88)",
+                            color: "#17435E",
+                            fontSize: 11,
+                            fontWeight: 800,
+                            "& .MuiChip-icon": {
+                              fontSize: 13,
+                              color: "#58758A"
+                            }
+                          }}
                         />
                       ))}
                     </Stack>
                   </Stack>
-                  <Stack spacing={0.35}>
-                    <Typography color="text.secondary">
+                  <Stack direction="row" spacing={{xs: 1.6, md: 2.2}} alignItems="center" sx={{flexShrink: 0, pl: {md: 1}}}>
+                    <Typography sx={{fontSize: 12.5, color: "#17435E", fontWeight: 700, whiteSpace: "nowrap"}}>
                       {tTour("adultPrice")}:{" "}
+                      <Box component="span" sx={{fontWeight: 900, color: "#00437D"}}>
                       {typeof pricing.adultPrice === "number"
                         ? `${pricing.adultPrice} ${tour.pricing.currency}`
                         : tTour("priceOnRequest")}
+                      </Box>
                     </Typography>
-                    <Typography color="text.secondary">
+                    <Typography sx={{fontSize: 12.5, color: "#17435E", fontWeight: 700, whiteSpace: "nowrap"}}>
                       {tTour("childPrice")}:{" "}
+                      <Box component="span" sx={{fontWeight: 900, color: "#00437D"}}>
                       {typeof pricing.childPrice === "number"
                         ? `${pricing.childPrice} ${tour.pricing.currency}`
                         : tTour("priceOnRequest")}
+                      </Box>
                     </Typography>
                   </Stack>
                 </Stack>
@@ -168,16 +244,34 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
             <>
               {hasFreeChildRule ? (
                 <Chip
-                  icon={<LocalOfferRoundedIcon />}
+                  icon={<PersonRoundedIcon />}
                   label={`${tTour("freeChildAge")}: ${tour.participantRules?.freeChildMinAge}-${tour.participantRules?.freeChildMaxAge}`}
-                  sx={{alignSelf: "flex-start"}}
+                  sx={{
+                    alignSelf: "flex-start",
+                    height: 42,
+                    px: 0.8,
+                    borderRadius: `${radiusTokens.md}px`,
+                    bgcolor: "rgba(255,239,221,0.96)",
+                    color: "#11354A",
+                    fontWeight: 900,
+                    "& .MuiChip-icon": {color: "#00437D", fontSize: 18}
+                  }}
                 />
               ) : null}
               {hasChildRule ? (
                 <Chip
-                  icon={<LocalOfferRoundedIcon />}
+                  icon={<PersonRoundedIcon />}
                   label={`${tTour("childAge")}: ${tour.participantRules?.childMinAge}-${tour.participantRules?.childMaxAge}`}
-                  sx={{alignSelf: "flex-start"}}
+                  sx={{
+                    alignSelf: "flex-start",
+                    height: 42,
+                    px: 0.8,
+                    borderRadius: `${radiusTokens.md}px`,
+                    bgcolor: "rgba(255,239,221,0.96)",
+                    color: "#11354A",
+                    fontWeight: 900,
+                    "& .MuiChip-icon": {color: "#00437D", fontSize: 18}
+                  }}
                 />
               ) : null}
               {!hasFreeChildRule && !hasChildRule ? (

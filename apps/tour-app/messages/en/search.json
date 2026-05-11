@@ -3,5 +3,6 @@
   "suggestionsTitle": "Did you mean:",
   "speechNotDetected": "No voice detected. Please try again.",
   "micPermissionDenied": "Microphone permission is required for voice search.",
-  "speechUnsupported": "Voice search is not supported on this device."
+  "speechUnsupported": "Voice search is not supported on this device.",
+  "noQuickFilterResults": "No tours match this filter."
 }

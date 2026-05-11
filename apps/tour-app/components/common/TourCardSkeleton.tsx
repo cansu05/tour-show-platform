@@ -1,8 +1,9 @@
-﻿import {Card, CardContent, Skeleton, Stack} from '@mui/material';
+import {Card, CardContent, Skeleton, Stack} from '@mui/material';
+import {radiusTokens} from '@/theme/tokens';
 
 export function TourCardSkeleton() {
   return (
-    <Card sx={{borderRadius: 3, overflow: 'hidden'}}>
+    <Card sx={{borderRadius: `${radiusTokens.lg}px`, overflow: 'hidden'}}>
       <Skeleton variant="rectangular" height={220} />
       <CardContent sx={{p: 2.25}}>
         <Stack spacing={1.2}>
@@ -15,4 +16,3 @@ export function TourCardSkeleton() {
     </Card>
   );
 }
-

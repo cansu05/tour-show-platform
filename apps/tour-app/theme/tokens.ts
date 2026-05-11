@@ -13,3 +13,12 @@ export const colorTokens = {
   textSecondary: '#2A4A5F',
   textMuted: '#5B7B8F'
 } as const;
+
+export const radiusTokens = {
+  none: 0,
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  round: 999
+} as const;

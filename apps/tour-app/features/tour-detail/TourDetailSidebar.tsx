@@ -5,6 +5,7 @@ import RestaurantRoundedIcon from '@mui/icons-material/RestaurantRounded';
 import {Grid2, Paper, Stack, Typography} from '@mui/material';
 import {ShareActions} from '@/features/sharing/SharePanel';
 import type {TourDetailSidebarProps, TourMetaItemProps} from '@/features/tour-detail/tour-detail.types';
+import {radiusTokens} from '@/theme/tokens';
 
 function TourMetaItem({label, value, icon}: TourMetaItemProps) {
   return (
@@ -13,7 +14,7 @@ function TourMetaItem({label, value, icon}: TourMetaItemProps) {
       sx={{
         minHeight: 84,
         p: 1.4,
-        borderRadius: 2,
+        borderRadius: `${radiusTokens.lg}px`,
         bgcolor: 'rgba(236,246,251,0.85)',
         border: '1px solid rgba(5,63,92,0.08)',
         alignItems: 'center',
@@ -51,7 +52,7 @@ export function TourDetailSidebar({
         elevation={0}
         sx={{
           p: {xs: 2.4, md: 2.8},
-          borderRadius: 3,
+          borderRadius: `${radiusTokens.lg}px`,
           bgcolor: '#FFFFFF',
           color: 'text.primary',
           boxShadow: '0 14px 30px rgba(5,63,92,0.1)',
@@ -108,7 +109,7 @@ export function TourDetailSidebar({
         elevation={0}
         sx={{
           p: {xs: 2.4, md: 2.8},
-          borderRadius: 2.25,
+          borderRadius: `${radiusTokens.lg}px`,
           bgcolor: 'background.paper',
           boxShadow: '0 10px 24px rgba(5,63,92,0.08)'
         }}

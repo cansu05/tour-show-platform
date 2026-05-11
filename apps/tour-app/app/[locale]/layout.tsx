@@ -32,28 +32,24 @@ export default async function LocaleLayout({
       <Box
         sx={{
           minHeight: '100vh',
-          background:
-            'radial-gradient(circle at 8% 6%, rgba(159,231,245,0.62) 0%, rgba(159,231,245,0) 34%), radial-gradient(circle at 92% -8%, rgba(247,173,25,0.28) 0%, rgba(247,173,25,0) 36%), linear-gradient(165deg, #F6FBFD 0%, #EBF5FA 100%)',
-          py: {xs: 2, md: 3.5}
+          background: 'linear-gradient(180deg, #F4FAFF 0%, #FFFFFF 58%)',
+          py: {xs: 1.2, md: 1.6}
         }}
       >
-        <Container maxWidth="xl" sx={{px: {xs: 1.5, md: 3}}}>
+        <Container maxWidth={false} sx={{px: {xs: 1.2, md: 1.8}}}>
           <Box
             sx={{
-              maxWidth: 1360,
+              position: 'relative',
+              maxWidth: 1540,
               mx: 'auto',
-              px: {xs: 1.2, md: 2.5},
-              py: {xs: 1.2, md: 2},
-              borderRadius: 2.5,
-              bgcolor: 'rgba(255,255,255,0.72)',
-              backdropFilter: {xs: 'none', md: 'blur(4px)'},
-              boxShadow: '0 14px 36px rgba(5,63,92,0.10)'
+              px: 0,
+              py: 0
             }}
           >
-            <Stack spacing={{xs: 2, md: 2.75}}>
+            <Box sx={{position: 'absolute', top: {xs: 10, md: 0}, right: {xs: 10, md: 34}, zIndex: 5}}>
               <LocaleSwitcher />
-              {children}
-            </Stack>
+            </Box>
+            <Stack spacing={{xs: 2, md: 2.2}}>{children}</Stack>
           </Box>
         </Container>
       </Box>

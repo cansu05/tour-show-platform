@@ -9,6 +9,7 @@ import {Box, Dialog, IconButton, Stack, Typography} from '@mui/material';
 import Image from 'next/image';
 import {useTranslations} from 'next-intl';
 import {isUploadedTourAsset} from '@/utils/media';
+import {radiusTokens} from '@/theme/tokens';
 
 type GalleryItem =
   | {type: 'image'; src: string}
@@ -62,7 +63,7 @@ export function TourGallery({images, alt, videoUrl, videoUrls = []}: Props) {
 
   return (
     <Stack spacing={1}>
-      <Box sx={{position: 'relative', borderRadius: 2, overflow: 'hidden'}}>
+      <Box sx={{position: 'relative', borderRadius: `${radiusTokens.lg}px`, overflow: 'hidden'}}>
         <Box sx={{position: 'relative', width: '100%', height: {xs: 320, md: 520}, bgcolor: '#000'}}>
           {currentItem?.type === 'video' ? (
             <Box

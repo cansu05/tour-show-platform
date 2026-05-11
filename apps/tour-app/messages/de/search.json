@@ -4,4 +4,6 @@
   "speechNotDetected": "Keine Sprache erkannt. Bitte versuche es erneut.",
   "micPermissionDenied": "Für die Sprachsuche ist Mikrofonzugriff erforderlich.",
   "speechUnsupported": "Sprachsuche wird auf diesem Gerät nicht unterstützt."
+  ,
+  "noQuickFilterResults": "Keine Touren passen zu diesem Filter."
 }

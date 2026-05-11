@@ -3,5 +3,6 @@
   "suggestionsTitle": "Bunları mı demek istediniz?",
   "speechNotDetected": "Ses algılanamadı. Lütfen tekrar deneyin.",
   "micPermissionDenied": "Sesli arama için mikrofon izni gerekiyor.",
-  "speechUnsupported": "Bu cihazda sesli arama desteklenmiyor."
+  "speechUnsupported": "Bu cihazda sesli arama desteklenmiyor.",
+  "noQuickFilterResults": "Bu filtreye uygun tur bulunamadı."
 }

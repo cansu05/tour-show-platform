@@ -1,5 +1,6 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {Paper, Stack, Typography} from '@mui/material';
+import {radiusTokens} from '@/theme/tokens';
 
 type Props = {
   title: string;
@@ -12,7 +13,7 @@ export function StateCard({title, description}: Props) {
       elevation={0}
       sx={{
         p: {xs: 3, md: 4},
-        borderRadius: 4,
+        borderRadius: `${radiusTokens.lg}px`,
         background: 'linear-gradient(180deg, #FFFFFF 0%, #F4FBFE 100%)',
         boxShadow: '0 8px 22px rgba(5,63,92,0.08)'
       }}

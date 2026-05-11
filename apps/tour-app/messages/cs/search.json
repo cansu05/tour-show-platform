@@ -4,4 +4,6 @@
   "speechNotDetected": "Nebyl rozpoznan zadny hlas. Zkuste to znovu.",
   "micPermissionDenied": "Pro hlasove hledani je vyzadovano povoleni mikrofonu.",
   "speechUnsupported": "Hlasove hledani neni na tomto zarizeni podporovano."
+  ,
+  "noQuickFilterResults": "Tomuto filtru neodpovídají žádné výlety."
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:clean": "npm run clean:next && next dev",
-    "build": "next build",
+    "build": "node scripts/build-next.mjs",
     "build:clean": "npm run clean:next && next build",
     "start": "next start",
     "clean:next": "node scripts/clean-next.mjs",

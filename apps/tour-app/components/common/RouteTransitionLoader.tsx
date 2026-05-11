@@ -3,6 +3,7 @@
 import {Box} from '@mui/material';
 import {usePathname, useSearchParams} from 'next/navigation';
 import {useEffect, useMemo, useRef, useState} from 'react';
+import {radiusTokens} from '@/theme/tokens';
 
 const MAX_LOADER_MS = 10000;
 
@@ -109,7 +110,7 @@ export function RouteTransitionLoader() {
           width: '34%',
           height: '100%',
           bgcolor: 'secondary.main',
-          borderRadius: 999,
+          borderRadius: `${radiusTokens.sm}px`,
           animation: isLoading ? 'route-loader 1.15s ease-in-out infinite' : 'none',
           '@keyframes route-loader': {
             '0%': {transform: 'translateX(-120%)'},

@@ -1,38 +1,128 @@
-import {Box, Stack, Typography} from '@mui/material';
-import type {TourListHeroProps} from '@/features/tour-list/tour-list.types';
+import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import FamilyRestroomRoundedIcon from "@mui/icons-material/FamilyRestroomRounded";
+import LocalOfferRoundedIcon from "@mui/icons-material/LocalOfferRounded";
+import { Box, Chip, Stack, Typography } from "@mui/material";
+import { useTranslations } from "next-intl";
+import type { ReactElement } from "react";
+import type {
+  TourListHeroProps,
+  TourQuickFilter,
+} from "@/features/tour-list/tour-list.types";
+import { radiusTokens } from "@/theme/tokens";
 
-export function TourListHero({title, subtitle}: TourListHeroProps) {
+const HERO_BADGES: Array<{
+  filter: TourQuickFilter;
+  labelKey: "quickFilterToday" | "quickFilterFamily" | "quickFilterEconomy";
+  icon: ReactElement;
+}> = [
+  { filter: "today", labelKey: "quickFilterToday", icon: <CalendarMonthRoundedIcon /> },
+
+  {
+    filter: "family",
+    labelKey: "quickFilterFamily",
+    icon: <FamilyRestroomRoundedIcon />,
+  },
+
+  { filter: "economy", labelKey: "quickFilterEconomy", icon: <LocalOfferRoundedIcon /> },
+];
+
+export function TourListHero({
+  activeQuickFilter,
+  onQuickFilterChange,
+}: TourListHeroProps) {
+  const tHome = useTranslations("home");
+
   return (
     <Box
+      component="section"
       sx={{
-        position: 'relative',
-        overflow: 'hidden',
-        borderRadius: 2.5,
-        px: {xs: 2.5, md: 4},
-        py: {xs: 2.5, md: 3.5},
-        background:
-          'linear-gradient(150deg, rgba(5,63,92,0.96) 0%, rgba(66,158,189,0.88) 52%, rgba(159,231,245,0.94) 100%)',
-        boxShadow: '0 16px 34px rgba(5,63,92,0.18)',
-        color: 'common.white',
-        '&::after': {
+        position: "relative",
+        overflow: "hidden",
+        borderRadius: `${radiusTokens.lg}px`,
+        minHeight: { xs: 470, sm: 450, md: 410 },
+        px: { xs: 2, sm: 4, md: 8 },
+        pt: { xs: 5.7, md: 6.2 },
+        pb: { xs: 17.5, md: 14 },
+        backgroundImage:
+          "linear-gradient(90deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.84) 33%, rgba(255,255,255,0.34) 58%, rgba(255,255,255,0) 80%), url('/assets/hero-2.png')",
+        backgroundSize: "cover",
+        backgroundPosition: { xs: "61% center", sm: "58% center", md: "center center" },
+        boxShadow: "0 18px 44px rgba(26,86,130,0.13)",
+        color: "#0A2D5D",
+        "&::before": {
           content: '""',
-          position: 'absolute',
-          width: 340,
-          height: 340,
-          right: -96,
-          top: -160,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(247,173,25,0.3) 0%, rgba(247,173,25,0) 72%)'
-        }
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(180deg, rgba(245,251,255,0.42) 0%, rgba(245,251,255,0) 38%)",
+          pointerEvents: "none",
+        },
       }}
     >
-      <Stack spacing={1} maxWidth={700} sx={{position: 'relative', zIndex: 1, mx: 'auto', textAlign: 'center', alignItems: 'center'}}>
-        <Typography variant="h1" sx={{color: 'inherit'}}>
-          {title}
+      <Stack
+        spacing={2}
+        sx={{ position: "relative", zIndex: 1, width: { xs: "100%", md: 500 }, maxWidth: { xs: 330, md: 500 } }}
+      >
+        <Typography
+          variant="h1"
+          sx={{
+            whiteSpace: "pre-line",
+            color: "inherit",
+            fontSize: { xs: 30, sm: 44, md: 48 },
+            lineHeight: { xs: 1.04, md: 0.98 },
+            letterSpacing: 0,
+            maxWidth: 500,
+            textShadow: "0 1px 0 rgba(255,255,255,0.22)",
+          }}
+        >
+          {tHome("landingHeroHeadline")}
         </Typography>
-        <Typography sx={{fontSize: {xs: 17, md: 20}, color: 'rgba(255,255,255,0.92)', maxWidth: 580, width: '100%', mx: 'auto', textAlign: 'center'}}>
-          {subtitle}
+        <Typography
+          sx={{
+            fontSize: { xs: 12.5, md: 15 },
+            lineHeight: 1.48,
+            color: "#506783",
+            maxWidth: 390,
+            fontWeight: 600,
+          }}
+        >
+          {tHome("landingHeroDescription")}
         </Typography>
+        <Stack
+          direction="row"
+          gap={0.9}
+          flexWrap="wrap"
+          sx={{ pt: 0.3, maxWidth: 560 }}
+        >
+          {HERO_BADGES.map((badge) => {
+            const active = activeQuickFilter === badge.filter;
+
+            return (
+              <Chip
+                key={badge.filter}
+                icon={badge.icon}
+                label={tHome(badge.labelKey)}
+                clickable
+                color={active ? "primary" : "default"}
+                onClick={() => onQuickFilterChange(badge.filter)}
+                sx={{
+                  height: { xs: 36, md: 40 },
+                  px: { xs: 0.9, md: 1.25 },
+                  borderRadius: `${radiusTokens.lg}px`,
+                  bgcolor: active ? "#00437D" : "rgba(255,255,255,0.96)",
+                  color: active ? "#FFFFFF" : "#0A4C91",
+                  fontSize: { xs: 11.2, md: 12 },
+                  fontWeight: 800,
+                  boxShadow: "0 8px 18px rgba(22,75,124,0.11)",
+                  "& .MuiChip-icon": {
+                    fontSize: 17,
+                    color: active ? "#FFFFFF" : "#0A77C8",
+                  },
+                }}
+              />
+            );
+          })}
+        </Stack>
       </Stack>
     </Box>
   );

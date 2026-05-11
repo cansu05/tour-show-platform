@@ -9,6 +9,7 @@ import {useEffect, useState} from 'react';
 import {useTranslations} from 'next-intl';
 import type {AppLocale} from '@/constants/locales';
 import {buildTourShareUrl, buildWhatsAppShareUrl} from '@/utils/share-url';
+import {radiusTokens} from '@/theme/tokens';
 
 type Props = {
   slug: string;
@@ -67,7 +68,7 @@ export function ShareActions({slug, title, locale, onFeedback}: Props) {
           onClick={onCopy}
           aria-label={tTour('copyLink')}
           fullWidth
-          sx={{minHeight: 52, justifyContent: 'flex-start', px: 2.1, borderRadius: 1.25}}
+          sx={{minHeight: 52, justifyContent: 'flex-start', px: 2.1, borderRadius: `${radiusTokens.sm}px`}}
         >
           {tTour('copyLink')}
         </Button>
@@ -85,7 +86,7 @@ export function ShareActions({slug, title, locale, onFeedback}: Props) {
               minHeight: 48,
               justifyContent: 'flex-start',
               px: 2.1,
-              borderRadius: 1.25,
+              borderRadius: `${radiusTokens.sm}px`,
               bgcolor: 'rgba(5,63,92,0.1)',
               color: 'primary.main',
               '&:hover': {bgcolor: 'rgba(5,63,92,0.16)'}
@@ -103,7 +104,7 @@ export function ShareActions({slug, title, locale, onFeedback}: Props) {
               minHeight: 48,
               justifyContent: 'flex-start',
               px: 2.1,
-              borderRadius: 1.25,
+              borderRadius: `${radiusTokens.sm}px`,
               bgcolor: 'rgba(5,63,92,0.1)',
               color: 'primary.main',
               '&:hover': {bgcolor: 'rgba(5,63,92,0.16)'}
@@ -119,7 +120,7 @@ export function ShareActions({slug, title, locale, onFeedback}: Props) {
         <DialogTitle>{tTour('qr')}</DialogTitle>
         <DialogContent>
           <Stack spacing={1.2} alignItems="center" sx={{pt: 0.5}}>
-            <Paper elevation={0} sx={{p: 1.5, borderRadius: 1.75, boxShadow: '0 8px 20px rgba(5,63,92,0.12)'}}>
+            <Paper elevation={0} sx={{p: 1.5, borderRadius: `${radiusTokens.md}px`, boxShadow: '0 8px 20px rgba(5,63,92,0.12)'}}>
               <QRCodeSVG value={shareUrl} size={220} includeMargin />
             </Paper>
             <Typography variant="body2" color="text.secondary" sx={{wordBreak: 'break-all', textAlign: 'center'}}>

@@ -28,11 +28,18 @@ const nextConfig = {
     ]
   },
   typedRoutes: true,
+  experimental: {
+    webpackBuildWorker: false
+  },
   outputFileTracingRoot: monorepoRoot,
-  webpack(config) {
+  webpack(config, {isServer}) {
     config.resolve ??= {};
     config.resolve.alias ??= {};
     config.resolve.alias['next-intl/config'] = nextIntlConfigPath;
+    if (isServer) {
+      config.output ??= {};
+      config.output.chunkFilename = 'chunks/[name].js';
+    }
 
     return config;
   }
