@@ -1,6 +1,7 @@
 export const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
 export const MAX_VIDEO_SIZE_BYTES = 100 * 1024 * 1024;
 export const MAX_GALLERY_FILES = 24;
+export const MAX_VIDEO_FILES = 10;
 
 export const ACCEPTED_FILE_RULES = {
   cover: {
@@ -19,7 +20,7 @@ export const ACCEPTED_FILE_RULES = {
     mimePrefixes: ['video/'],
     extensions: new Set(['.mp4', '.webm', '.mov']),
     maxSize: MAX_VIDEO_SIZE_BYTES,
-    maxFiles: 1
+    maxFiles: MAX_VIDEO_FILES
   }
 } as const;
 
@@ -62,7 +63,7 @@ export function parseUploadKind(value: string): UploadKind | null {
 
 export function getUploadBaseName(kind: UploadKind, slug: string, index: number) {
   if (kind === 'cover') return `${slug}-cover`;
-  if (kind === 'video') return `${slug}-video`;
+  if (kind === 'video') return `${slug}-video-${index + 1}`;
   return `${slug}-${index + 1}`;
 }
 
@@ -70,7 +71,7 @@ export function validateUploadFiles(kind: UploadKind, files: Array<Pick<File, 'n
   const rules = ACCEPTED_FILE_RULES[kind];
 
   if (files.length > rules.maxFiles) {
-    throw new UploadValidationError(kind === 'gallery' ? 'Cok fazla dosya secildi.' : 'Bu alan tek dosya kabul eder.');
+    throw new UploadValidationError(kind === 'cover' ? 'Bu alan tek dosya kabul eder.' : 'Cok fazla dosya secildi.');
   }
 
   for (const file of files) {

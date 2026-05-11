@@ -52,6 +52,9 @@ function mapDashboardTour(raw: Record<string, unknown>, id: string): Tour | null
 
   const localized = raw.localized as Tour['localized'] | undefined;
   const gallery = stringArray(raw.gallery);
+  const videoUrls = Array.from(
+    new Set([...stringArray(raw.videoUrls), normalizeOptionalString(raw.videoUrl)].filter((entry): entry is string => Boolean(entry)))
+  );
   const trContent = localized?.tr;
   const fallbackLocalized = Object.values(localized || {}).find(Boolean);
   const title = trContent?.title || fallbackLocalized?.title || (typeof raw.title === 'string' ? raw.title : slug);
@@ -78,7 +81,8 @@ function mapDashboardTour(raw: Record<string, unknown>, id: string): Tour | null
     participantRules: raw.participantRules as Tour['participantRules'],
     coverImage: resolveDashboardCoverImage(raw.coverImage, gallery),
     gallery,
-    videoUrl: normalizeOptionalString(raw.videoUrl),
+    videoUrl: videoUrls[0],
+    videoUrls,
     localized,
     title,
     shortDescription,

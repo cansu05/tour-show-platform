@@ -526,8 +526,8 @@ export const MediaSection = memo(function MediaSection({
   coverFile,
   coverImage,
   coverPreviewUrls,
-  videoFile,
-  videoUrl,
+  videoFiles,
+  videoOrderedItems,
   videoPreviewUrls,
   galleryFiles,
   galleryOrderedItems,
@@ -536,9 +536,9 @@ export const MediaSection = memo(function MediaSection({
   onCoverFileChange,
   onClearCoverFile,
   onRemoveExistingCoverImage,
-  onVideoFileChange,
-  onClearVideoFile,
-  onRemoveExistingVideo,
+  onAppendVideoFiles,
+  onMoveVideoItem,
+  onRemoveVideoItem,
   onAppendGalleryFiles,
   onMoveGalleryItem,
   onRemoveGalleryItem
@@ -548,7 +548,7 @@ export const MediaSection = memo(function MediaSection({
       <SectionCard title="Medya" description="Kapak görseli, galeri ve video alanlarını ayrı bloklarda yöneterek içerik kalitesini yükseltin.">
         <div className="grid gap-4">
           <MediaUploader title="Kapak görseli" description="Liste ekranı ve tur kartlarında kullanılacak ana görsel." accept="image/*" files={coverFile ? [coverFile] : []} existingItems={coverImage && !coverFile ? [coverImage] : []} previewUrls={coverPreviewUrls} icon={<ImageRoundedIcon sx={{fontSize: 20}} />} onChange={onCoverFileChange} onRemove={onClearCoverFile} onRemoveExisting={() => onRemoveExistingCoverImage()} />
-          <MediaUploader title="Tanıtım videosu" description="MP4 veya benzeri dosya ile video anlatımı ekleyin." accept="video/*" files={videoFile ? [videoFile] : []} existingItems={videoUrl && !videoFile ? [videoUrl] : []} previewUrls={videoPreviewUrls} previewType="video" icon={<MovieRoundedIcon sx={{fontSize: 20}} />} onChange={onVideoFileChange} onRemove={onClearVideoFile} onRemoveExisting={() => onRemoveExistingVideo()} />
+          <MediaUploader title="Tanıtım videoları" description="Birden fazla MP4 veya benzeri video anlatımı ekleyin." accept="video/*" multiple files={videoFiles} orderedItems={videoOrderedItems} previewUrls={videoPreviewUrls} previewType="video" icon={<MovieRoundedIcon sx={{fontSize: 20}} />} onChange={onAppendVideoFiles} onRemove={() => undefined} onMoveOrderedItem={onMoveVideoItem} onRemoveOrderedItem={onRemoveVideoItem} />
           <MediaUploader title="Galeri görselleri" description="Birden fazla görsel yükleyerek tur detay sayfasındaki medya alanını güçlendirin." accept="image/*" multiple files={galleryFiles} orderedItems={galleryOrderedItems} previewUrls={galleryPreviewUrls} icon={<CloudUploadRoundedIcon sx={{fontSize: 20}} />} onChange={onAppendGalleryFiles} onRemove={() => undefined} onMoveOrderedItem={onMoveGalleryItem} onRemoveOrderedItem={onRemoveGalleryItem} />
         </div>
         {coverError ? <p className="text-sm font-medium text-danger-strong">{coverError}</p> : null}

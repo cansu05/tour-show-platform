@@ -118,7 +118,7 @@ export function TourDashboardForm({
   const [form, dispatch] = useReducer(dashboardFormReducer, initialData);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [galleryItems, setGalleryItems] = useState<GalleryMediaItem[]>(() => createExistingGalleryItems(splitMediaLines(initialData.gallery)));
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoItems, setVideoItems] = useState<GalleryMediaItem[]>(() => createExistingGalleryItems(splitMediaLines(initialData.videoUrl)));
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [keywordsDraft, setKeywordsDraft] = useState('');
   const [thingsDraft, setThingsDraft] = useState('');
@@ -135,7 +135,7 @@ export function TourDashboardForm({
     dispatch({type: 'reset', payload: initialData});
     setCoverFile(null);
     setGalleryItems(createExistingGalleryItems(splitMediaLines(initialData.gallery)));
-    setVideoFile(null);
+    setVideoItems(createExistingGalleryItems(splitMediaLines(initialData.videoUrl)));
     setKeywordsDraft('');
     setThingsDraft('');
     setNotesDraft('');
@@ -172,23 +172,32 @@ export function TourDashboardForm({
   }, []);
 
   const coverPreviewUrl = useObjectUrl(coverFile);
-  const videoPreviewUrl = useObjectUrl(videoFile);
   const galleryFiles = useMemo(() => galleryItems.flatMap((item) => (item.kind === 'new' ? [item.file] : [])), [galleryItems]);
+  const videoFiles = useMemo(() => videoItems.flatMap((item) => (item.kind === 'new' ? [item.file] : [])), [videoItems]);
   const galleryNewItems = useMemo(
     () => galleryItems.flatMap((item) => (item.kind === 'new' ? [{id: item.id, file: item.file}] : [])),
     [galleryItems]
   );
+  const videoNewItems = useMemo(
+    () => videoItems.flatMap((item) => (item.kind === 'new' ? [{id: item.id, file: item.file}] : [])),
+    [videoItems]
+  );
   const galleryNewItemUrls = useObjectUrlMap(galleryNewItems);
+  const videoNewItemUrls = useObjectUrlMap(videoNewItems);
   const galleryPreviewUrls = useMemo(() => {
     const newUrlMap = new Map(galleryNewItems.map((item, index) => [item.id, galleryNewItemUrls[index]]));
     return galleryItems.map((item) => (item.kind === 'new' ? newUrlMap.get(item.id) || '' : item.url));
   }, [galleryItems, galleryNewItems, galleryNewItemUrls]);
+  const videoPreviewUrls = useMemo(() => {
+    const newUrlMap = new Map(videoNewItems.map((item, index) => [item.id, videoNewItemUrls[index]]));
+    return videoItems.map((item) => (item.kind === 'new' ? newUrlMap.get(item.id) || '' : item.url));
+  }, [videoItems, videoNewItems, videoNewItemUrls]);
 
   const deferredPreviewForm = useDeferredValue(form);
   const deferredGalleryItems = useDeferredValue(galleryItems);
   const deferredGalleryPreviewUrls = useDeferredValue(galleryPreviewUrls);
+  const deferredVideoPreviewUrls = useDeferredValue(videoPreviewUrls);
   const deferredCoverPreviewUrl = useDeferredValue(coverPreviewUrl);
-  const deferredVideoPreviewUrl = useDeferredValue(videoPreviewUrl);
 
   const derivedState = useMemo(() => {
     const sharedOptions = {coverFile, galleryItems};
@@ -218,9 +227,9 @@ export function TourDashboardForm({
         coverPreviewUrl: deferredCoverPreviewUrl,
         galleryPreviewUrls: deferredGalleryPreviewUrls,
         galleryItems: deferredGalleryItems,
-        videoPreviewUrl: deferredVideoPreviewUrl
+        videoPreviewUrls: deferredVideoPreviewUrls
       }),
-    [deferredCoverPreviewUrl, deferredGalleryItems, deferredGalleryPreviewUrls, deferredPreviewForm, deferredVideoPreviewUrl]
+    [deferredCoverPreviewUrl, deferredGalleryItems, deferredGalleryPreviewUrls, deferredPreviewForm, deferredVideoPreviewUrls]
   );
 
   const {validationSummary, draftValidationSummary, selectedPublishValidationSummary, sectionStatuses, completionCount} = derivedState;
@@ -229,6 +238,7 @@ export function TourDashboardForm({
   const canSaveDraft = Object.keys(draftValidationSummary).length === 0;
   const canSubmitSelectedState = Object.keys(selectedPublishValidationSummary).length === 0;
   const galleryOrderedItems = useMemo(() => getGalleryOrderedItems(galleryItems), [galleryItems]);
+  const videoOrderedItems = useMemo(() => getGalleryOrderedItems(videoItems), [videoItems]);
   const actionHint = getActionHint({
     canPreview,
     canSaveDraft,
@@ -312,14 +322,13 @@ export function TourDashboardForm({
     setField('coverImage', '');
   }, [setField]);
 
-  const removeExistingVideo = useCallback(() => {
-    setField('videoUrl', '');
-  }, [setField]);
-
   const handleCoverFileChange = useCallback((files: File[]) => setCoverFile(files[0] || null), []);
-  const handleVideoFileChange = useCallback((files: File[]) => setVideoFile(files[0] || null), []);
   const clearCoverFile = useCallback(() => setCoverFile(null), []);
-  const clearVideoFile = useCallback(() => setVideoFile(null), []);
+
+  const appendVideoFiles = useCallback((files: File[]) => {
+    if (files.length === 0) return;
+    setVideoItems((current) => [...current, ...createNewGalleryItems(files)]);
+  }, []);
 
   const appendGalleryFiles = useCallback((files: File[]) => {
     if (files.length === 0) return;
@@ -330,15 +339,23 @@ export function TourDashboardForm({
     setGalleryItems((current) => moveArrayItem(current, fromIndex, toIndex));
   }, []);
 
+  const moveVideoItem = useCallback((fromIndex: number, toIndex: number) => {
+    setVideoItems((current) => moveArrayItem(current, fromIndex, toIndex));
+  }, []);
+
   const removeGalleryItem = useCallback((index: number) => {
     setGalleryItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
+  }, []);
+
+  const removeVideoItem = useCallback((index: number) => {
+    setVideoItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
   }, []);
 
   const resetForm = useCallback(() => {
     dispatch({type: 'reset', payload: initialData});
     setCoverFile(null);
     setGalleryItems(createExistingGalleryItems(splitMediaLines(initialData.gallery)));
-    setVideoFile(null);
+    setVideoItems(createExistingGalleryItems(splitMediaLines(initialData.videoUrl)));
     setKeywordsDraft('');
     setThingsDraft('');
     setNotesDraft('');
@@ -421,7 +438,7 @@ export function TourDashboardForm({
       const result: UploadResult = {
         coverImage: form.coverImage,
         gallery: [],
-        videoUrl: form.videoUrl
+        videoUrls: []
       };
 
       if (coverFile) result.coverImage = (await uploadBatch(slug, 'cover', [coverFile]))[0];
@@ -440,11 +457,19 @@ export function TourDashboardForm({
         result.coverImage = result.gallery[0];
       }
 
-      if (videoFile) result.videoUrl = (await uploadBatch(slug, 'video', [videoFile]))[0];
+      const uploadedVideos = videoFiles.length > 0 ? await uploadBatch(slug, 'video', videoFiles) : [];
+      let uploadedVideoIndex = 0;
+
+      result.videoUrls = videoItems.flatMap((item) => {
+        if (item.kind === 'existing') return item.url ? [item.url] : [];
+
+        const uploadedUrl = uploadedVideos[uploadedVideoIndex++];
+        return uploadedUrl ? [uploadedUrl] : [];
+      });
 
       return result;
     },
-    [coverFile, form.coverImage, form.videoUrl, galleryFiles, galleryItems, uploadBatch, videoFile]
+    [coverFile, form.coverImage, galleryFiles, galleryItems, uploadBatch, videoFiles, videoItems]
   );
 
   const runSubmit = useCallback(
@@ -474,7 +499,7 @@ export function TourDashboardForm({
               (galleryItems.some((item) => item.kind === 'new')
                 ? galleryItems.map((item, index) => (item.kind === 'existing' ? item.url : `__pending_gallery_${index}__`)).join('\n')
                 : ''),
-            videoUrl: nextForm.videoUrl || (videoFile ? '__pending_video__' : '')
+            videoUrl: videoItems.map((item, index) => (item.kind === 'existing' ? item.url : `__pending_video_${index}__`)).join('\n')
           });
 
           const uploaded = await uploadFiles(slug);
@@ -483,7 +508,7 @@ export function TourDashboardForm({
             slug,
             coverImage: uploaded.coverImage,
             gallery: uploaded.gallery.join('\n'),
-            videoUrl: uploaded.videoUrl
+            videoUrl: uploaded.videoUrls.join('\n')
           });
 
           const endpoint = mode === 'edit' && originalSlug ? `/api/dashboard/tours/${originalSlug}` : '/api/dashboard/tours';
@@ -522,7 +547,7 @@ export function TourDashboardForm({
         }
       })();
     },
-    [coverFile, form, galleryItems, mode, originalSlug, router, setField, uploadFiles, videoFile]
+    [coverFile, form, galleryItems, mode, originalSlug, router, setField, uploadFiles, videoItems]
   );
 
   const openPreview = useCallback(() => {
@@ -633,9 +658,9 @@ export function TourDashboardForm({
             coverFile={coverFile}
             coverImage={form.coverImage}
             coverPreviewUrls={coverPreviewUrl ? [coverPreviewUrl] : form.coverImage ? [form.coverImage] : []}
-            videoFile={videoFile}
-            videoUrl={form.videoUrl}
-            videoPreviewUrls={videoPreviewUrl ? [videoPreviewUrl] : form.videoUrl ? [form.videoUrl] : []}
+            videoFiles={videoFiles}
+            videoOrderedItems={videoOrderedItems}
+            videoPreviewUrls={videoPreviewUrls}
             galleryFiles={galleryFiles}
             galleryOrderedItems={galleryOrderedItems}
             galleryPreviewUrls={galleryPreviewUrls}
@@ -643,9 +668,9 @@ export function TourDashboardForm({
             onCoverFileChange={handleCoverFileChange}
             onClearCoverFile={clearCoverFile}
             onRemoveExistingCoverImage={removeExistingCoverImage}
-            onVideoFileChange={handleVideoFileChange}
-            onClearVideoFile={clearVideoFile}
-            onRemoveExistingVideo={removeExistingVideo}
+            onAppendVideoFiles={appendVideoFiles}
+            onMoveVideoItem={moveVideoItem}
+            onRemoveVideoItem={removeVideoItem}
             onAppendGalleryFiles={appendGalleryFiles}
             onMoveGalleryItem={moveGalleryItem}
             onRemoveGalleryItem={removeGalleryItem}

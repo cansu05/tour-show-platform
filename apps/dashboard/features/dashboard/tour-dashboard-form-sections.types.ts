@@ -134,8 +134,8 @@ export type MediaSectionProps = {
   coverFile: File | null;
   coverImage: string;
   coverPreviewUrls: string[];
-  videoFile: File | null;
-  videoUrl: string;
+  videoFiles: File[];
+  videoOrderedItems: OrderedMediaItem[];
   videoPreviewUrls: string[];
   galleryFiles: File[];
   galleryOrderedItems: OrderedMediaItem[];
@@ -144,9 +144,9 @@ export type MediaSectionProps = {
   onCoverFileChange: (files: File[]) => void;
   onClearCoverFile: () => void;
   onRemoveExistingCoverImage: () => void;
-  onVideoFileChange: (files: File[]) => void;
-  onClearVideoFile: () => void;
-  onRemoveExistingVideo: () => void;
+  onAppendVideoFiles: (files: File[]) => void;
+  onMoveVideoItem: (fromIndex: number, toIndex: number) => void;
+  onRemoveVideoItem: (index: number) => void;
   onAppendGalleryFiles: (files: File[]) => void;
   onMoveGalleryItem: (fromIndex: number, toIndex: number) => void;
   onRemoveGalleryItem: (index: number) => void;

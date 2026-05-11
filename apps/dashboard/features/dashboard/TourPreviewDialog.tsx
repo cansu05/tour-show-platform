@@ -23,6 +23,7 @@ export type TourPreviewData = {
   hasTransfer: boolean;
   hasMeal: boolean;
   videoUrl?: string;
+  videoUrls?: string[];
   coverImage?: string;
   gallery: string[];
   updatedAt?: string;
@@ -77,10 +78,8 @@ export function TourPreviewDialog({
     const uniqueImages = Array.from(new Set(imageSources));
     const items: MediaItem[] = uniqueImages.map((src) => ({ type: "image", src }));
 
-    const videoSrc = toDashboardMediaUrl(preview.videoUrl);
-    if (videoSrc) {
-      items.push({ type: "video", src: videoSrc });
-    }
+    const videoSources = Array.from(new Set([...(preview.videoUrls || []), preview.videoUrl].map((item) => toDashboardMediaUrl(item)).filter(Boolean)));
+    items.push(...videoSources.map((src) => ({ type: "video" as const, src })));
 
     return items;
   }, [preview]);
@@ -181,7 +180,7 @@ export function TourPreviewDialog({
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Transfer</p><p className="mt-2 text-sm font-medium text-ink">{preview.hasTransfer ? "Var" : "Yok"}</p></div>
                 <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Yemek</p><p className="mt-2 text-sm font-medium text-ink">{preview.hasMeal ? "Var" : "Yok"}</p></div>
-                <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Video</p><p className="mt-2 text-sm font-medium text-ink">{preview.videoUrl ? "Var" : "Yok"}</p></div>
+                <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Video</p><p className="mt-2 text-sm font-medium text-ink">{preview.videoUrls?.length || preview.videoUrl ? "Var" : "Yok"}</p></div>
                 <div className="rounded-[20px] bg-panel-subtle p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Galeri</p><p className="mt-2 text-sm font-medium text-ink">{preview.gallery.length} görsel</p></div>
               </div>
 

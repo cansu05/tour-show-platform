@@ -55,7 +55,7 @@ export function PublicTourDetail({tour}: PublicTourDetailProps) {
 
       <Grid2 container spacing={{xs: 2, md: 2.5}}>
         <Grid2 size={{xs: 12, md: 8}}>
-          <TourGallery images={imageSet} alt={tour.title} videoUrl={tour.videoUrl} />
+          <TourGallery images={imageSet} alt={tour.title} videoUrl={tour.videoUrl} videoUrls={tour.videoUrls} />
         </Grid2>
 
         <Grid2 size={{xs: 12, md: 4}}>

@@ -43,6 +43,7 @@ export type Tour = {
   coverImage: string;
   gallery: string[];
   videoUrl?: string;
+  videoUrls?: string[];
   localized?: Partial<Record<AppLocale, TourLocalizedContent>>;
   title: string;
   shortDescription: string;

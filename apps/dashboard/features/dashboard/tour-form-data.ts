@@ -163,6 +163,7 @@ export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): 
   const shortDescription = input.shortDescription.trim();
   const description = input.description.trim();
   const gallery = splitMultiline(input.gallery);
+  const videoUrls = splitMultiline(input.videoUrl);
   const coverImage = resolveFormCoverImage(input.coverImage, gallery);
   const thingsToBring = input.thingsToBring.map((entry) => entry.trim()).filter(Boolean);
   const importantNotes = input.importantNotes.map((entry) => entry.trim()).filter(Boolean);
@@ -182,7 +183,8 @@ export function buildTourDocumentFromDashboardInput(input: DashboardTourInput): 
     participantRules: buildParticipantRules(input.participantRules),
     coverImage,
     gallery,
-    videoUrl: input.videoUrl.trim() || undefined,
+    videoUrl: videoUrls[0],
+    videoUrls: videoUrls.length > 0 ? videoUrls : undefined,
     localized: {
       ...syncLocalizedTitles(input.localized, title),
       tr: {
@@ -206,6 +208,7 @@ export function buildDashboardFormFromTour(tour: Tour): DashboardTourInput {
   const byRegion = tour.pricing.byRegion || {};
   const publishState = tour.publishState || (tour.isActive ? 'active' : 'passive');
   const gallery = tour.gallery || [];
+  const videoUrls = tour.videoUrls?.length ? tour.videoUrls : tour.videoUrl ? [tour.videoUrl] : [];
 
   return {
     slug: tour.slug,
@@ -219,7 +222,7 @@ export function buildDashboardFormFromTour(tour: Tour): DashboardTourInput {
     localized: tour.localized || {},
     coverImage: resolveFormCoverImage(tour.coverImage || '', gallery),
     gallery: gallery.join('\n'),
-    videoUrl: tour.videoUrl || '',
+    videoUrl: videoUrls.join('\n'),
     currency: tour.pricing.currency || 'EUR',
     campaignPrice: typeof tour.campaignPrice === 'number' ? String(tour.campaignPrice) : '',
     hasTransfer: tour.hasTransfer,

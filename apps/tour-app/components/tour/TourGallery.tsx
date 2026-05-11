@@ -18,6 +18,7 @@ type Props = {
   images: string[];
   alt: string;
   videoUrl?: string;
+  videoUrls?: string[];
 };
 
 function normalizeMediaSrc(value?: string) {
@@ -32,7 +33,7 @@ const protectedMediaSx = {
   WebkitTouchCallout: 'none'
 } as const;
 
-export function TourGallery({images, alt, videoUrl}: Props) {
+export function TourGallery({images, alt, videoUrl, videoUrls = []}: Props) {
   const tTour = useTranslations('tour');
   const source = useMemo<GalleryItem[]>(() => {
     const normalizedImages = images.map((src) => src.trim()).filter(Boolean);
@@ -40,10 +41,12 @@ export function TourGallery({images, alt, videoUrl}: Props) {
       type: 'image' as const,
       src
     }));
-    const normalizedVideoUrl = normalizeMediaSrc(videoUrl);
+    const normalizedVideoUrls = Array.from(
+      new Set([...videoUrls, videoUrl].map((url) => normalizeMediaSrc(url)).filter((url): url is string => Boolean(url)))
+    );
 
-    return normalizedVideoUrl ? [...imageItems, {type: 'video', src: normalizedVideoUrl}] : imageItems;
-  }, [images, videoUrl]);
+    return normalizedVideoUrls.length > 0 ? [...imageItems, ...normalizedVideoUrls.map((src) => ({type: 'video' as const, src}))] : imageItems;
+  }, [images, videoUrl, videoUrls]);
   const [index, setIndex] = useState(0);
   const [open, setOpen] = useState(false);
 

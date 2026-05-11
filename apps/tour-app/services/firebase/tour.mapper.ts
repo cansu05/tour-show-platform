@@ -44,7 +44,10 @@ export function mapTourDocument(raw: TourDocument, idFallback: string): Tour | n
   const priceSummary = getTourPriceSummary(raw.pricing, raw.campaignPrice);
 
   const coverImage = normalizeOptionalString(raw.coverImage) || gallery[0] || PLACEHOLDER_IMAGE;
-  const videoUrl = normalizeOptionalString(raw.videoUrl);
+  const videoUrls = Array.from(
+    new Set([...stringArray(raw.videoUrls), normalizeOptionalString(raw.videoUrl)].filter((entry): entry is string => Boolean(entry)))
+  );
+  const videoUrl = videoUrls[0];
 
   return {
     id: raw.id ?? idFallback,
@@ -61,6 +64,7 @@ export function mapTourDocument(raw: TourDocument, idFallback: string): Tour | n
     coverImage,
     gallery,
     videoUrl,
+    videoUrls,
     localized: raw.localized,
     title,
     shortDescription,

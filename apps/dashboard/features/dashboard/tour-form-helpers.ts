@@ -10,7 +10,7 @@ import {
 export type UploadResult = {
   coverImage: string;
   gallery: string[];
-  videoUrl: string;
+  videoUrls: string[];
 };
 
 export type GalleryMediaItem =
@@ -132,20 +132,21 @@ export function buildFormPreviewData({
   coverPreviewUrl,
   galleryPreviewUrls,
   galleryItems,
-  videoPreviewUrl
+  videoPreviewUrls
 }: {
   form: DashboardTourInput;
   coverPreviewUrl?: string;
   galleryPreviewUrls: string[];
   galleryItems: GalleryMediaItem[];
-  videoPreviewUrl?: string;
+  videoPreviewUrls: string[];
 }): TourPreviewData {
   const slug = normalizeDashboardSlug(form.slug || form.title) || 'taslak-tur';
   const fallbackGallery = getExistingGalleryUrls(galleryItems).map((url) => url.trim()).filter(Boolean);
   const normalizedPreviewGallery = galleryPreviewUrls.map((url) => url.trim()).filter(Boolean);
   const gallery = normalizedPreviewGallery.length > 0 ? normalizedPreviewGallery : fallbackGallery;
   const coverImage = normalizeOptionalMedia(coverPreviewUrl) || gallery[0] || normalizeOptionalMedia(form.coverImage) || '';
-  const videoUrl = normalizeOptionalMedia(videoPreviewUrl) || normalizeOptionalMedia(form.videoUrl);
+  const videoUrls = Array.from(new Set(videoPreviewUrls.map((url) => normalizeOptionalMedia(url)).filter((url): url is string => Boolean(url))));
+  const videoUrl = videoUrls[0];
   const byRegion = Object.entries(form.regions).reduce<Record<string, {adultPrice?: number; childPrice?: number; availableDays?: string[]}>>(
     (acc, [regionKey, region]) => {
       if (!region.enabled) return acc;
@@ -184,6 +185,7 @@ export function buildFormPreviewData({
     coverImage,
     gallery,
     videoUrl,
+    videoUrls,
     localized: undefined,
     title: form.title || 'İsimsiz tur',
     shortDescription: form.shortDescription,
@@ -204,6 +206,7 @@ export function buildFormPreviewData({
     hasTransfer: form.hasTransfer,
     hasMeal: form.hasMeal,
     videoUrl,
+    videoUrls,
     coverImage,
     gallery,
     updatedAt: undefined,
